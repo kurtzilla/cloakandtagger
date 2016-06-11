@@ -5,7 +5,7 @@ var knex = require('../db/knex');
 var multer  = require('multer');
 // const rimrafPromise  = require('rimraf-promise');
 var upload = multer({ dest: 'upfiles/' });
-var rmdir = require('rmdir');
+// var rmdir = require('rmdir');
 // var mkdirp = require('mkdirp');
 // var fs = require('fs');
 
