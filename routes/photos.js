@@ -3,14 +3,11 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../db/knex');
 var multer  = require('multer');
-// const rimrafPromise  = require('rimraf-promise');
 var upload = multer({ dest: 'upfiles/' });
-// var rmdir = require('rmdir');
-// var mkdirp = require('mkdirp');
-// var fs = require('fs');
-
-
+var del = require('del');
 var cloudinary = require('cloudinary');
+
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key:    process.env.CLOUDINARY_API_KEY,
@@ -18,18 +15,8 @@ cloudinary.config({
 });
 
 
-/* GET home page. */
-
-// require registered user to access
+// TODO require registered user to access
 router.use(function(req,res,next){
-  // console.log('photo middleware');
-  // if(res.locals.user.isAdmin){
-  //   next();
-  // }
-  // else {
-  //   res.redirect('/');
-  // }
-
   next();
 });
 
@@ -40,22 +27,23 @@ router.get('/', function(req, res, next) {
 });
 
 
-// TODO explore other upload options for security
+// TODO explore other upload options for security within the 'multer' module
 // https://www.npmjs.com/package/multer
 router.post('/', upload.any(), function(req,res,next){
-  console.log('photo post files', req.files);
-  console.log('photo post body', req.body);
-
-  var title = req.body.title.trim() || req.files[0].originalname;
-  console.log('title: ', title);
-
 
   // TODO: derive title from user and some random info
+  var title = req.body.title.trim() || req.files[0].originalname;
+  var tempDestination = req.files[0].path;
 
   cloudinary.uploader.upload(
-    req.files[0].path,
+    tempDestination,
     function(result) {
-      console.log(result);
+      // delete local temp file
+      // don't bother waiting for promie resolve to move on
+      del([tempDestination]).then(paths => {
+      	console.log('Files and folders that would be deleted:\n', paths.join('\n'));
+      });
+
       res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
     },
     {
@@ -66,19 +54,6 @@ router.post('/', upload.any(), function(req,res,next){
       // tags: ['special', 'for_homepage']
     }
   );
-
-
-  // TODO: delete temp files from upload.dest folder
-  // console.log('upload', upload);
-  // rmdir('upfiles', function (err, dirs, files) {
-  //   console.log(dirs);
-  //   console.log(files);
-  //   console.log('all files are removed');
-  // });
-
-
-  // pass back uploaded photo
-
 });
 
 module.exports = router;
