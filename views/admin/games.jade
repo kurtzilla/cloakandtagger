@@ -1,0 +1,24 @@
+extends admin
+
+block context-menu
+  div new/paging
+  
+block console
+  table
+    tr
+      th id
+      th title
+      th hostuser
+      th start
+      th end
+      th actual end
+    if rows
+      each row in rows
+        tr
+          td= row.id
+          td= row.title
+          td= row.hostuserid
+          td= row.dtstart
+          td= row.dtend
+          td= row.dtactualend
+    

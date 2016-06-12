@@ -1,0 +1,16 @@
+extends admin
+
+block context-menu
+  div enums operations
+  
+block console
+  table
+    tr
+      th name
+      th values
+    if rows
+      each key, index in rows
+        tr 
+          td= index
+          td= key
+          

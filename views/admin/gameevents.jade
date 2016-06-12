@@ -1,0 +1,33 @@
+extends admin
+
+block context-menu
+  div gameevents operations
+  
+block console
+  table
+    tr
+      th id
+      th created
+      th status
+      th gameid
+      th playerid
+      th targetid
+      th verb
+      th old
+      th new
+      th description
+      th ip
+    if rows
+      each row in rows
+        tr
+          td= row.id
+          td= row.dtcreated
+          td= row.status
+          td= row.gameid
+          td= row.playerid
+          td= row.targetid
+          td= row.eventverb
+          td= row.oldvalue
+          td= row.newvalue
+          td= row.description
+          td= row.ipaddress

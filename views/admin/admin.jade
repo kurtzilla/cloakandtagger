@@ -1,0 +1,29 @@
+extends ../layout
+
+block content
+  
+  div(class="row")
+    div(class="col s3")
+      h5= title
+    div(class="col s9")
+      block context-menu
+        div listing of games
+    
+  div(class="row")
+    div(class="col s3")
+      a(href='/admin/' class="admin-selects hoverable") Games
+      br
+      a(href='/admin/users' class="admin-selects hoverable") Users
+      br
+      a(href='/admin/verbs' class="admin-selects hoverable") Verbs
+      br
+      a(href='/admin/enums' class="admin-selects hoverable") Enums
+      br
+      a(href='/admin/userevents' class="admin-selects hoverable") User Events
+      br
+      a(href='/admin/gameevents' class="admin-selects hoverable") Game Events
+      //- br
+      //- a(href='/admin/scaffolds' class="admin-selects hoverable") Scaffolds
+    div(class="col s9")
+      block console
+        div default

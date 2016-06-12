@@ -6,7 +6,7 @@ var knex = require('../db/knex');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   console.log('index');
-  res.render('index', { siteSection: 'index', title: 'Expressio' });
+  res.render('index', { siteSection: 'index', title: 'Home page' });
 });
 
 module.exports = router;

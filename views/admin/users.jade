@@ -1,0 +1,35 @@
+extends admin
+
+block context-menu
+  div new/paging
+  
+block console
+  table
+    tr
+      th id
+      th created
+      th active
+      th roles
+      th email
+      th first
+      th last
+      th image
+      th login
+      th token
+      th expiry
+      th lastlogin
+    if rows
+      each row in rows
+        tr
+          td= row.id
+          td= row.dtcreated
+          td= row.isactive
+          td= row.roles
+          td= row.email
+          td= row.firstname
+          td= row.lastname
+          td= row.imageurl
+          td= row.loginprovider
+          td= row.logintoken
+          td= row.loginexpiry
+          td= row.lastlogin

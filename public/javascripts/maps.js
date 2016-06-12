@@ -3,13 +3,17 @@ function initMap() {
 
   var errorDiv = document.querySelector('p.error');
   var mapDiv = document.getElementById('map');
+  var map;
 
 
-  if ('geolocation' in navigator) {
+  if (navigator && navigator.geolocation) {
+  //if ('geolocation' in navigator) {
     /* geolocation is available */
 
     // TODO ripe for a promise chain
-    navigator.geolocation.getCurrentPosition(function(position) {
+    // navigator.geolocation.getCurrentPosition(function(position) {
+
+    var watchId = navigator.geolocation.watchPosition(function(position) {
 
       var latLng = new google.maps.LatLng(position.coords.latitude,
         position.coords.longitude);
@@ -20,11 +24,16 @@ function initMap() {
       // TODO: initial lat long should be set in session
       // TODO: save location data in session/cookies - remember users view settings
       // TODO: cookie expires every x minutes (configurable in admin) to facilitate update
-      var map = new google.maps.Map(mapDiv, {
-        center: latLng,
-        tilt: 45,
-        zoom: 12
-      });
+      if(map == undefined) {
+        var myOptions = {
+          zoom: 12,
+          center: latLng,
+          tilt: 45,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        map = new google.maps.Map(mapDiv, myOptions);
+      }
+      else map.panTo(latLng);
 
       // add a marker at the current user's location
       // TODO customize icon to indicate current player
@@ -34,7 +43,13 @@ function initMap() {
         map: map
       });
 
-    });
+    },
+    function(err){
+      // log any errors
+      errorDiv.innerHTML = 'getCurrentPositionError: ' + err;
+    },
+    {enableHighAccuracy:true, timeout:60000, maximumAge:0} // age 5 minutes = 300000
+  );
 
 
   } else {

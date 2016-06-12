@@ -13,4 +13,9 @@ router.get('/signup', function(req, res, next) {
   res.render('users/signup', { siteSection: 'users', title: 'Signup' });
 });
 
+router.get('/signout', function(req, res, next) {
+  // TODO remove any session keys
+  res.redirect('/');
+});
+
 module.exports = router;

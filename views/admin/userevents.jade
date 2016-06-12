@@ -1,0 +1,29 @@
+extends admin
+
+block context-menu
+  div userevents operations
+  
+block console
+  table
+    tr
+      th id
+      th created
+      th status
+      th userid
+      th verb
+      th old
+      th new
+      th description
+      th ip
+    if rows
+      each row in rows
+        tr
+          td= row.id
+          td= row.dtcreated
+          td= row.status
+          td= row.userid
+          td= row.eventverb
+          td= row.oldvalue
+          td= row.newvalue
+          td= row.description
+          td= row.ipaddress
