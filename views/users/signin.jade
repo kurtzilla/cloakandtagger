@@ -2,12 +2,19 @@ extends ../layout
 
 block content
   h4 Signin
+  
+  if error
+    ul(class="error-list error")
+      each msg in error
+        li= msg
+        
   form(action='/users/signin' method='POST')
     p
       input(type='text' placeholder='Email' name='email')
     p
       input(type='password' placeholder='Password' name='password')
     p
-      input(type='submit' value='Sign In')
-    p
       div TODO captcha?
+    p
+      input(type='submit' value='Sign In' class="waves-effect waves-light btn")
+    

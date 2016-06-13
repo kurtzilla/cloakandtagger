@@ -7,13 +7,13 @@ exports.up = function(knex, Promise) {
     table.json('roles').notNullable();
     table.string('email').notNullable().unique();
     table.string('password').notNullable();
-    table.string('firstname').notNullable();
-    table.string('lastname').notNullable();
-    table.string('imageurl').notNullable();
+    table.string('firstname').notNullable().defaultTo('');
+    table.string('lastname').notNullable().defaultTo('');
+    table.string('imageurl').notNullable().defaultTo('');
     table.string('loginprovider').notNullable();
     table.text('logintoken').notNullable().defaultTo('');
-    table.timestamp('tokenexpiry').defaultTo(knex.fn.now());
-    table.timestamp('lastlogin').defaultTo(knex.fn.now());
+    table.timestamp('tokenexpiry');
+    table.timestamp('lastlogin');
   });
 };
 

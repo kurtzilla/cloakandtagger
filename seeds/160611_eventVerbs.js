@@ -19,6 +19,14 @@ exports.seed = function(knex, Promise) {
     knex('eventverbs').insert({name: 'gameStarted', description: 'a game has begun'}),
     knex('eventverbs').insert({name: 'gameEnded', description: 'a game has ended'}),
     knex('eventverbs').insert({name: 'gamePlayersAssigned', description: 'players have been assign to the active roster and their targets have been defined'}),
-    knex('eventverbs').insert({name: 'gameInitComplete', description: 'a game has run through the initialization process'})
+    knex('eventverbs').insert({name: 'gameInitComplete', description: 'a game has run through the initialization process'}),
+
+
+    knex('users').del(),
+
+    knex('users').insert({ dtcreated: '2016-06-12 21:42:25.77689-06', roles: JSON.stringify(['user','admin','super']),
+      email: 'rob@robkurtz.net', password: '$2a$08$YXR4x1YSq0.IWkmgtjvx/us4uQYWjXhfhY4dUdXtEEY55WmG5eIcm',
+      loginprovider: 'website'})
+
   );
 };

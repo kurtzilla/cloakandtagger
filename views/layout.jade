@@ -6,18 +6,26 @@ html
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
   body
-    p= session
+  
+    //- do some logging to debug
+    if user
+      p= user
+      
     div(id="siteSection" class="#{siteSection} container")
       nav 
         h1 Cloak and Tagger  
         div(class="links")
           a(href="/") home
-          a(href="/maps") maps
-          a(href="/photos") photos
-          a(href="/users/signin") signin
-          a(href="/users/signup") signup
-          a(href="/users/signout") signout
-          a(href="/admin") admin
+          if user
+            a(href="/maps") maps
+            a(href="/photos") photos
+          if !user
+            a(href="/users/signin") signin
+            a(href="/users/signup") signup
+          if user
+            a(href="/users/signout") signout
+            if user && user.roles && user.roles.indexOf('admin') !== -1
+              a(href="/admin") admin
     
       div(id="pageContent")
         block content

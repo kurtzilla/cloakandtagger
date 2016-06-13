@@ -58,7 +58,8 @@ app.use(function(req,res,next){
   // }
 
   // console.log('Session: 44 ', req.session);
-  res.locals.session = JSON.stringify(req.session);
+  console.log('session user', req.session.user);
+  res.locals.user = req.session.user;
   next();
 });
 

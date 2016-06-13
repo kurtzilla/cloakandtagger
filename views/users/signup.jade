@@ -4,16 +4,17 @@ block content
   h4 Signup
   
   if error
-    ul(class="error-list")
+    ul(class="error-list error")
       each msg in error
         li= msg
   
   form(action='/users/signup' method='POST')
     p
-     input(type='text' placeholder='Email' name='email')
+      input(type='text' placeholder='Email' name='email')
     p
-     input(type='password' placeholder='Password' name='password')
-    p
-     input(type='submit' value='Sign Up')
+      input(type='password' placeholder='Password' name='password')
     p
       div TODO captcha
+    p
+      input(type='submit' value='Sign Up' class="waves-effect waves-light btn")
+    
