@@ -1,6 +1,7 @@
 {
   "name": "cloak-and-tagger",
   "version": "0.0.0",
+  "main": "app.js",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -20,6 +21,7 @@
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
     "pg": "^5.0.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "tabris": "^1.8.0"
   }
 }
