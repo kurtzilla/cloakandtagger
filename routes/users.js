@@ -4,7 +4,6 @@ var router = express.Router();
 var knex = require('../db/knex');
 var bcrypt = require('bcrypt');
 var enums = require('../lib/enums');
-// var requestIp = require('request-ip');
 
 // facilitate signup
 router.get('/signup', function(req, res, next) {
@@ -62,8 +61,6 @@ router.post('/signup', function(req, res, next) {
         .returning('id')
         .then(function(id) {
 
-          console.log('going to insert event');
-
           // log an event - don't bother with return, promise, etc
           knex('userevents').insert({
             status: enums.eventStatus[1],
@@ -75,15 +72,10 @@ router.post('/signup', function(req, res, next) {
           })
           .then(function(eventrow){
 
-            console.log('eventrow inserted');
-
             knex('users').where({ id: parseInt(id) })
             .first()
             .then(function(data) {
               // get rid of pwd in session object
-
-              console.log('retrieved data');
-
               data.password = null;
               req.session.user = data;
               res.redirect('/');
@@ -154,7 +146,6 @@ router.post('/signin', function(req,res,next) {
           ipaddress: req.connection.remoteAddress
         }).into('userevents')
         .then(function(eventrow){
-          console.log('event success: ', eventrow);
           // get rid of pwd in session object
           data.password = null;
           req.session.user = data;
