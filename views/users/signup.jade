@@ -1,4 +1,19 @@
 extends ../layout
 
 block content
-  h5 Signup
+  h4 Signup
+  
+  if error
+    ul(class="error-list")
+      each msg in error
+        li= msg
+  
+  form(action='/users/signup' method='POST')
+    p
+     input(type='text' placeholder='Email' name='email')
+    p
+     input(type='password' placeholder='Password' name='password')
+    p
+     input(type='submit' value='Sign Up')
+    p
+      div TODO captcha

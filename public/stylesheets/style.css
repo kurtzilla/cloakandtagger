@@ -1,6 +1,16 @@
-body {
-  padding: 15px;
-  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+body.container {
+
+}
+#siteSection{
+
+}
+#siteSection.container{
+  /*border:solid red 1px;*/
+  /*padding: 0;
+  margin:0;*/
+  width:100%;
+  min-width:400px;
+  max-width:760px;
 }
 
 a {
@@ -8,18 +18,20 @@ a {
 }
 
 nav {
-  padding:.5em 1em;
-  height:80px !important;
+  padding:.5em 2em;
+  height:100px !important;
 }
 
 nav h1 {
   font-size:2.5em;
   padding:0;
-  margin:5px 0;
+  margin:5px 0 0 0;
 }
 
 nav a {
-  font-size:10px;
+}
+nav a.active {
+  color:#999;
 }
 nav a:after {
   content: ' | ';
@@ -27,9 +39,10 @@ nav a:after {
 nav a:last-child:after {
   content: none;
 }
+
 div.links {
-  margin-left:1em;
-  line-height:2em;
+  margin-left:0;
+  line-height:3.5em;
 }
 
 #pageContent{
@@ -51,7 +64,6 @@ div.links {
   padding:5px;
   display:inline-block;
   margin-right:15px;
-  font-size: 9px;
 }
 
 .error {

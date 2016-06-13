@@ -1,4 +1,13 @@
 extends ../layout
 
 block content
-  h5 Signin
+  h4 Signin
+  form(action='/users/signin' method='POST')
+    p
+      input(type='text' placeholder='Email' name='email')
+    p
+      input(type='password' placeholder='Password' name='password')
+    p
+      input(type='submit' value='Sign In')
+    p
+      div TODO captcha?

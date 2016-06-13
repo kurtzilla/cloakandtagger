@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
     table.boolean('isactive').notNullable().defaultTo(true);
     table.json('roles').notNullable();
     table.string('email').notNullable().unique();
+    table.string('password').notNullable();
     table.string('firstname').notNullable();
     table.string('lastname').notNullable();
     table.string('imageurl').notNullable();
