@@ -26,7 +26,7 @@ exports.seed = function(knex, Promise) {
 
     knex('users').insert({ dtcreated: '2016-06-12 21:42:25.77689-06', roles: JSON.stringify(['user','admin','super']),
       email: 'rob@robkurtz.net', password: '$2a$08$YXR4x1YSq0.IWkmgtjvx/us4uQYWjXhfhY4dUdXtEEY55WmG5eIcm',
-      loginprovider: 'website'})
+      loginprovider: 'website', lastlogin: '2016-06-12 21:42:25.77689-06'})
 
   );
 };

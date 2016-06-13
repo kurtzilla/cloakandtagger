@@ -1,6 +1,6 @@
 
 exports.up = function(knex, Promise) {
-  return knex.schema.createTable('configger', function(table){
+  return knex.schema.createTable('gameconfig', function(table){
     table.increments('id').primary();
     table.timestamp('dtcreated').defaultTo(knex.fn.now());
     table.string('name').notNullable().unique();
@@ -9,5 +9,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTable('configger');
+  return knex.schema.dropTable('gameconfig');
 };

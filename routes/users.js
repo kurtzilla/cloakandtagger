@@ -4,7 +4,7 @@ var router = express.Router();
 var knex = require('../db/knex');
 var bcrypt = require('bcrypt');
 var enums = require('../lib/enums');
-
+// var requestIp = require('request-ip');
 
 // facilitate signup
 router.get('/signup', function(req, res, next) {
@@ -47,6 +47,7 @@ router.post('/signup', function(req, res, next) {
 
       // if there is return data - there was a matching row
       if (data.length) {
+        // TODO clear out input
         res.render('users/signup', { siteSection: 'users', title: 'Signup', error: ['Username is taken'] });
       } else {
 
@@ -61,19 +62,39 @@ router.post('/signup', function(req, res, next) {
         .returning('id')
         .then(function(id) {
 
-          // TODO log an event
+          console.log('going to insert event');
 
-          knex('users').where({ id: parseInt(id) })
-          .first()
-          .then(function(data) {
-            // get rid of pwd in session object
-            data.password = null;
-            req.session.user = data;
-            res.redirect('/');
+          // log an event - don't bother with return, promise, etc
+          knex('userevents').insert({
+            status: enums.eventStatus[1],
+            userid: parseInt(id),
+            eventverb: 'signup',
+            newvalue: _email.toLowerCase(),
+            description: 'new user signup',
+            ipaddress: req.connection.remoteAddress
           })
-          .catch(function(err) {
+          .then(function(eventrow){
+
+            console.log('eventrow inserted');
+
+            knex('users').where({ id: parseInt(id) })
+            .first()
+            .then(function(data) {
+              // get rid of pwd in session object
+
+              console.log('retrieved data');
+
+              data.password = null;
+              req.session.user = data;
+              res.redirect('/');
+            })
+            .catch(function(err) {
+              next(err);
+            });
+          })
+          .catch(function(err){
             next(err);
-          });
+          })
         })
         .catch(function(err) {
           next(err);
@@ -122,21 +143,33 @@ router.post('/signin', function(req,res,next) {
     .then(function(data){
 
       if(data && bcrypt.compareSync(_pwd, data.password)){
-        // console.log('signin info AOK');
 
-        // TODO log an event
+        // log an event
+        knex.insert({
+          status: enums.eventStatus[1],
+          userid: data.id,
+          eventverb: 'signin',
+          newvalue: _email.toLowerCase(),
+          description: 'user signin',
+          ipaddress: req.connection.remoteAddress
+        }).into('userevents')
+        .then(function(eventrow){
+          console.log('event success: ', eventrow);
+          // get rid of pwd in session object
+          data.password = null;
+          req.session.user = data;
 
-        // get rid of pwd in session object
-        data.password = null;
-        req.session.user = data;
+          // update last login
+          knex('users')
+          .update({lastlogin: new Date()})
+          .where({id: data.id})
+          .then(function(data){
+            res.redirect('/');
+          })
+          .catch(function(err){
+            next(err);
+          });
 
-        // TODO update last login
-        knex('users')
-        .update({lastlogin: new Date()})
-        .where({id: data.id})
-        .then(function(data){
-          // console.log('update login', data);
-          res.redirect('/');
         })
         .catch(function(err){
           next(err);
