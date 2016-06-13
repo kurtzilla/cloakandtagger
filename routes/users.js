@@ -5,6 +5,11 @@ var knex = require('../db/knex');
 var bcrypt = require('bcrypt');
 var enums = require('../lib/enums');
 
+router.use(function(req,res,next){
+  // console.log('users router');
+  next();
+});
+
 // facilitate signup
 router.get('/signup', function(req, res, next) {
   res.render('users/signup', { siteSection: 'users', title: 'Signup' } );

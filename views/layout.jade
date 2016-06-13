@@ -25,6 +25,7 @@ html
           if user
             a(href="/users/signout") signout
             if user && user.roles && user.roles.indexOf('admin') !== -1
+              a(href="/game") games
               a(href="/admin") admin
     
       div(id="pageContent")

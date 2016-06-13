@@ -74,3 +74,12 @@ div.links {
 .admin-selects{
   background-color: #eee;
 }
+
+.game-creation{
+  padding:15px;
+}
+.all-game-info{
+  /*border:solid red 1px;*/
+  background-color:#eee;
+  line-height:3em;
+}

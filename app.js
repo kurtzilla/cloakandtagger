@@ -14,6 +14,7 @@ var users = require('./routes/users');
 var maps = require('./routes/maps');
 var photos = require('./routes/photos');
 var admin = require('./routes/admin');
+var game = require('./routes/game');
 
 
 // establish app
@@ -36,28 +37,8 @@ app.use(cookieSession(
 // middleware to handle session setup - persist session info
 app.use(function(req,res,next){
 
-  // if(Array.isArray(req.session.userId)){
-  //   req.session.userId = req.session.userId[0];
-  // }
-  //
-  // if(req.session.userId){
-  //   knex('users')
-  //     .where({id:req.session.userId})
-  //     .first()
-  //     .then(function(data){
-  //       if(data){
-  //         res.locals.user = data;
-  //         next();
-  //       } else {
-  //         res.locals.user = {username:'Guest'};
-  //       }
-  //   });
-  // } else {
-  //   res.locals.user = {username:'Guest'};
-  //   next();
-  // }
-
-  //console.log('session user', req.session.user);
+  // console.log('session user', req.session.user);
+  console.log('why does this log twice?');
   res.locals.user = req.session.user;
   next();
 });
@@ -79,6 +60,7 @@ app.use('/users', users);
 app.use('/maps', maps);
 app.use('/photos', photos);
 app.use('/admin', admin);
+app.use('/game', game);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
