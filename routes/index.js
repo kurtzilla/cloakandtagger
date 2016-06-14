@@ -12,11 +12,11 @@ router.get('/', function(req, res, next) {
 module.exports = router;
 
 router.get('/testgamelist', function(req, res, next) {
-  res.render('./join/gamelist');
+  res.render('join/gamelist');
 })
 router.get('/testgamedetail', function(req, res, next) {
-  res.render('./join/gamedetail');
+  res.render('join/gamedetail');
 })
 router.get('/testgameplay', function(req, res, next) {
-  res.render('./gameplay/gameplay');
+  res.render('gameplay/gameplay');
 })
