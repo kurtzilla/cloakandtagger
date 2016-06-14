@@ -26,7 +26,17 @@ exports.seed = function(knex, Promise) {
 
     knex('users').insert({ dtcreated: '2016-06-12 21:42:25.77689-06', roles: JSON.stringify(['user','admin','super']),
       email: 'rob@robkurtz.net', password: '$2a$08$YXR4x1YSq0.IWkmgtjvx/us4uQYWjXhfhY4dUdXtEEY55WmG5eIcm',
+      loginprovider: 'website', lastlogin: '2016-06-12 21:42:25.77689-06'}),
+    knex('users').insert({ dtcreated: '2016-06-12 21:42:25.77689-06', roles: JSON.stringify(['user','admin','super']),
+      email: 'smlcate@yahoo.com', password: '$2a$08$8EgMdEPPd6IOEcBsELTMVOSVD5ssD9/tt9VydPlvWk0UrSjVoyupW',
+      loginprovider: 'website', lastlogin: '2016-06-12 21:42:25.77689-06'}),
+    knex('users').insert({ dtcreated: '2016-06-12 21:42:25.77689-06', roles: JSON.stringify(['user','admin','super']),
+      email: 'ziopads@gmail.com', password: '$2a$08$Ylp785Fqy1fAozQ5yjOGmOxq8KWVbsK9o/xFxACvywNLb..tjtqjS',
       loginprovider: 'website', lastlogin: '2016-06-12 21:42:25.77689-06'})
+    //   ,
+    // knex('users').insert({ dtcreated: '2016-06-12 21:42:25.77689-06', roles: JSON.stringify(['user','admin','super']),
+    //   email: 'rob@robkurtz.net', password: '$2a$08$YXR4x1YSq0.IWkmgtjvx/us4uQYWjXhfhY4dUdXtEEY55WmG5eIcm',
+    //   loginprovider: 'website', lastlogin: '2016-06-12 21:42:25.77689-06'})
 
   );
 };
