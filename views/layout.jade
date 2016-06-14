@@ -3,8 +3,8 @@ html
   head
     title= title
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css")
-    
-    link(rel='stylesheet', href='/stylesheets/robstyle.css')
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+    link(rel='stylesheet', href='/stylesheets/style.css')
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
   body
     div(class="hiddeninfo")
@@ -16,38 +16,74 @@ html
       input(type="hidden" id="userlocale" value="")
       input(type="hidden" id="targetlocale" value="")
   
+    //- div(class="video-container")
+    //-   div(class="filter")
+    //-     video(autoplay loop class="fillWidth")
+    //-       source(src="PATH_TO_MP4" type="video/mp4" /)
+    //-       source(src="PATH_TO_MP4" type="video/mp4" /)
+  
     //- do some logging to debug
     //- if user
     //-   p= user
       
-    div(id="siteSection" class="#{siteSection} container")
-      nav 
-        h1 Cloak and Tagger  
-        div(class="links")
-          a(href="/") home
-          if user
-            a(href="/maps") maps
-            a(href="/photos") photos
-          if !user
-            a(href="/users/signin") signin
-            a(href="/users/signup") signup
-          if user
-            a(href="/users/signout") signout
-            if user && user.roles && user.roles.indexOf('admin') !== -1
-              a(href="/games") games
-              a(href="/admin") admin
-    
+    header(id="siteSection" class="#{siteSection}")
+      //- h2 Cloak and Tagger 
+      div(class="navbar-fixed")
+        nav 
+          a(href="/" class="left brand-logo") Logo
+          a(href="#" data-activates="slide-out" class="right button-collapse")
+            i(class="left material-icons") menu
+          //- div(class="links")
+            //- img(src="../images/ic_menu_black_24dp")
+          ul(id="slide-out" class="side-nav right")
+            div(id='menu-list')
+            li
+              a(href="#" data-activates="slide-out" class="right button-collapse")
+                i(class="material-icons") clear
+            if user
+              li
+                a(href="/users/signout") signout
+              hr
+              li
+                a(href="/testgameplay") Hunt
+              li
+                a(href="/testgamelist") Join
+              li
+                a(href="/signout") Host
+            if !user
+              li
+                a(href="/users/signin") signin
+                a(href="/users/signup") signup  
+            li
+              a(href="/") About
+            li
+              a(href="/") Rules
+            li
+              a(href="/") Privacy
+            li
+              a(href="/") FAQ
+            li
+              a(href="/") Legal
+            if user
+              li
+                a(href="/maps") maps
+                a(href="/photos") photos
+              if user.roles && user.roles.indexOf('admin') !== -1
+                li
+                  a(href="/admin") admin
+            
+    main
       div(id="pageContent")
         block content
-  
+    footer(id="footer" class="page-footer")
+      //- div(class="container")
+      div(class="footer-copyright") 
+        div(id="tag") TAG
     
     
-    //- script(src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous")
     script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js")
     
-    
-    //- if siteSection == 'maps'
     script(src="/javascripts/maps.js")  
     script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
       

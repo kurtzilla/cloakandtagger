@@ -1,0 +1,23 @@
+body {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+
+header {
+
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+
+
+
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
