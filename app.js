@@ -19,6 +19,17 @@ var admin = require('./routes/admin');
 // establish app
 var app = express();
 
+// tabris app setup
+var page = new tabris.Page({
+  topLevel: true,
+  title: "app"
+});
+new tabris.TextView({
+  layoutData: {centerX: 0, centerY: 0},
+  text: "My First App"
+}).appendTo(page);
+page.open();
+
 app.use(cookieSession(
   {
     name: 'session',
@@ -109,17 +120,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-// tabris app setup
-var page = new tabris.Page({
-  topLevel: true,
-  title: "app"
-});
-new tabris.TextView({
-  layoutData: {centerX: 0, centerY: 0},
-  text: "My First App"
-}).appendTo(page);
-
-page.open();
 
 
 module.exports = app;
