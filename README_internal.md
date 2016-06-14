@@ -47,3 +47,16 @@ A link from my code journal directly to the actual API I used - https://dev.proj
 To drop all tables within postgres:
 drop schema public cascade;
 create schema public;
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////
+wondering how often the position is updated in the client?
+basically you have no control - it is up to your device hardware's GPS sensor
+read here:
+http://stackoverflow.com/questions/35294154/cordova-geolocation-watchposition-frequency-is-higher-than-the-options-allow-it

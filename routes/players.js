@@ -59,8 +59,8 @@ router.post('/:playerid', upload.any(), function(req,res,next) {
   //verify inputs
   var _alias = req.body.alias.trim();
   var _bio = req.body.bio.trim();
-  var _locale = req.body.locale.trim();
   var _tempDestination = (req.files && req.files[0] && req.files[0].path) ? req.files[0].path : '';
+  var _existingImage = req.session.user.imageurl;
   var _errors = [];
 
 
@@ -70,7 +70,7 @@ router.post('/:playerid', upload.any(), function(req,res,next) {
   if(_bio.length === 0){
     _errors.push('Bio is required');
   }
-  if(_tempDestination.length === 0){
+  if(_existingImage.length === 0 && _tempDestination.length === 0){
     _errors.push('Image is required');
   }
 
@@ -80,42 +80,62 @@ router.post('/:playerid', upload.any(), function(req,res,next) {
       player: req.session.player, user: req.session.user});
   } else {
 
-    //update image first
-    cloudinary.uploader.upload(
-      _tempDestination,
-      function(result) {
+    // if a new image was specified....we have already determined that one or the other exists
+    if(_tempDestination.length > 0){
+      //update image first
+      cloudinary.uploader.upload(
+        _tempDestination,
+        function(result) {
 
-        knex('users')
-        .where({id: req.session.user.id})
-        .update({
-          imageurl: result.url
-        })
-        .then(function(data){
-          knex('players')
-          .where({ id: parseInt(req.params.playerid)})
+          knex('users')
+          .where({id: req.session.user.id})
           .update({
-            alias: _alias,
-            bio: _bio,
-            lastlocation: _locale
+            imageurl: result.url
           })
           .then(function(data){
-            // if all good then redirect - let next route handle object population
-            res.redirect('/players/' + req.params.playerid);
+
+            del([_tempDestination]);
+
+            knex('players')
+            .where({ id: parseInt(req.params.playerid)})
+            .update({
+              alias: _alias,
+              bio: _bio,
+              lastlocation: _locale
+            })
+            .then(function(data){
+              // if all good then redirect - let next route handle object population
+              res.redirect('/players/' + req.params.playerid);
+            })
+            .catch(function(err){
+              next(err);
+            });
           })
           .catch(function(err){
             next(err);
           });
-        })
-        .catch(function(err){
-          next(err);
-        });
-      },
-      {
-        crop: 'fit',
-        width: 200,
-        height: 200
-      }
-    );
+        },
+        {
+          crop: 'fit',
+          width: 200,
+          height: 200
+        }
+      );
+    } else {
+      knex('players')
+      .where({ id: parseInt(req.params.playerid)})
+      .update({
+        alias: _alias,
+        bio: _bio
+      })
+      .then(function(data){
+        // if all good then redirect - let next route handle object population
+        res.redirect('/players/' + req.params.playerid);
+      })
+      .catch(function(err){
+        next(err);
+      });
+    }
   }
 });
 

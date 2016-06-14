@@ -8,10 +8,11 @@ block content
   form(method='post' enctype='multipart/form-data')
     p Image title: 
       input(type="text" name="title")
-    p Image: 
-      input(type="file" name="image")
     p 
-      input(type="submit" value="Upload")
+      label(for"image" class="file-upload-label") Image
+      input(type="file" name="image" class="waves-effect waves-light btn")
+    p 
+      input(type="submit" value="Upload" class="waves-effect waves-light btn")
       
   p
   p

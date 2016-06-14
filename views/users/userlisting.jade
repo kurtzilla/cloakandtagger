@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  h5 User Listing
+  
+  table(class="bordered striped")
+    tr
+      th select
+      th first
+      th last
+    each row in rows
+      tr
+        td
+          a(href="/users/#{row.id}") #{row.email}
+        td #{row.firstname}
+        td #{row.lastname}

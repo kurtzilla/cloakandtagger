@@ -22,11 +22,9 @@ block content
       p
         img(src="#{user.imageurl}" width="150" height="150")
       p
-        input(type="file" name="image")
+        label(for"image" class="file-upload-label") Image
+        input(type="file" name="image" class="waves-effect waves-light btn")
       p 
-        input(type="submit" value="Update Player")
-        
-      input(type="hidden" name="locale")
-      
-    
+        input(type="submit" value="Update Player" class="waves-effect waves-light btn")
+
     p TODO select alias/ bio combo from presets?

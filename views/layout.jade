@@ -7,6 +7,14 @@ html
     link(rel='stylesheet', href='/stylesheets/robstyle.css')
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
   body
+    div(class="hiddeninfo")
+      if user
+        input(type="hidden" id="userid" value="#{user.id}")
+      else
+        input(type="hidden" id="userid" value="0")
+        
+      input(type="hidden" id="userlocale" value="")
+      input(type="hidden" id="targetlocale" value="")
   
     //- do some logging to debug
     //- if user
@@ -38,8 +46,9 @@ html
     script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js")
     
-    if siteSection == 'maps'
-      script(src="/javascripts/maps.js")  
-      script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
+    
+    //- if siteSection == 'maps'
+    script(src="/javascripts/maps.js")  
+    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
       
     script(src="/javascripts/client.js")

@@ -83,3 +83,9 @@ div.links {
   background-color:#eee;
   line-height:3em;
 }
+.file-upload-label {
+  font-size:1.1em;
+  color:#999;
+  opacity:.5;
+  margin-right:10px;
+}
