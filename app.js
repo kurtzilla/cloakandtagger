@@ -2,20 +2,13 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-
-var knex = require('./db/knex');
-<<<<<<< HEAD
-
+var knex = require('./db/knex')
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var strategy = require('./routes/auth');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
-
-=======
-var tabris = require('tabris');
->>>>>>> e238d34638ecf648e116cf7795c79b6755d601fb
 
 // include route files
 var routes = require('./routes/index');
