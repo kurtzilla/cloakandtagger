@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  h5 Game Listing
+  a(href="/games/new" class="waves-effect waves-light btn") New Game
+  p
+  table(class="bordered striped")
+    tr
+      th select
+      th start
+      th end
+      th creatorid
+    each row in rows
+      tr
+        td
+          a(href="/games/#{row.id}") #{row.title}
+        td #{moment(row.dtstart).format("YYYY-MM-DD HH:mmA")}
+        td #{moment(row.dtend).format("YYYY-MM-DD HH:mmA")}
+        td= row.hostuserid

@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  div(class="game-creation z-depth-1")
+    h5 New Game
+    
+    if error
+      ul(class="error-list error")
+        each msg in error
+          li= msg
+          
+    form(action="/games/new" method="POST" enctype='multipart/form-data')
+      p
+        input(type="text" placeholder="title" name="title")
+      p 
+        label(for"image" class="file-upload-label") Image
+        input(type="file" name="image" class="waves-effect waves-light btn")
+      div(class="row")
+        div(class="col s6")
+          input(type="date" class="datepicker" placeholder="Start date" required name="startdate")
+        div(class="col s6 all-game-info") All games will begin at 8AM and run for 72 hours
+      p
+        input(type="submit" value="Create Game" class="waves-effect waves-light btn")

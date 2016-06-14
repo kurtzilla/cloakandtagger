@@ -40,15 +40,16 @@ router.post('/', upload.any(), function(req,res,next){
     function(result) {
       // delete local temp file
       // don't bother waiting for promie resolve to move on
-      del([tempDestination]).then(paths => {
-      	console.log('Files and folders that would be deleted:\n', paths.join('\n'));
-      });
+      del([tempDestination]);
+      // .then(paths => {
+      // 	console.log('Files and folders that would be deleted:\n', paths.join('\n'));
+      // });
 
       res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
     },
     {
-      public_id: 'sample_id',
-      crop: 'limit',
+      //public_id: 'sample_id',
+      crop: 'fit',
       width: 200,
       height: 200
       // tags: ['special', 'for_homepage']

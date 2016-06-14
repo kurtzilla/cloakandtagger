@@ -1,0 +1,49 @@
+extends ../layout
+
+block content
+  div(class="game-creation z-depth-1")
+    h5 #{game.title} 
+    
+    if error
+      ul(class="error-list error")
+        each msg in error
+          li= msg
+    
+    p host: #{game.hostuserid} start: #{moment(game.dtstart).format("YY-MM-DD HH:mmA")}  end: #{moment(game.dtend).format("YY-MM-DD HH:mmA")}
+    hr
+    a(href="/games/#{game.id}/join/" class="waves-effect waves-light btn") Join Game
+    
+    h6 player listing  
+    if players.length > 0
+      ul
+        each ent in players
+          li= ent.userid
+    
+    h6 active players
+    if actives.length > 0
+      ul
+        each ent in actives
+          li= ent.playerid
+    
+    h6 game events
+    table(class="bordered striped")
+      tr
+        th date
+        th status
+        th playerid
+        th targetid
+        th verb
+        th oldval
+        th newval
+        th description
+        th ip
+      each ent in events
+        td #{moment(ent.dtcreated).format("YY-MM-DD HH:mm:ss")}
+        td= ent.status
+        td= ent.playerid
+        td= ent.targetplayerid
+        td= ent.eventverb
+        td= ent.oldvalue
+        td= ent.newvalue
+        td= ent.description
+        td= ent.ipaddress
