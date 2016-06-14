@@ -176,8 +176,7 @@ router.post('/signup', function(req, res, next) {
           email: _email.toLowerCase(),
           password: bcrypt.hashSync(_pwd, 8), // encrypt the pass for db storage
           roles: JSON.stringify([enums.userRole[0]]),
-          loginprovider: enums.loginProvider[0],
-          lastlogin: new Date()
+          loginprovider: enums.loginProvider[0]
         })
         .returning('id')
         .then(function(id) {
@@ -270,18 +269,7 @@ router.post('/signin', function(req,res,next) {
           // get rid of pwd in session object
           data.password = null;
           req.session.user = data;
-
-          // update last login
-          knex('users')
-          .update({lastlogin: new Date()})
-          .where({id: data.id})
-          .then(function(data){
-            res.redirect('/');
-          })
-          .catch(function(err){
-            next(err);
-          });
-
+          res.redirect('/');
         })
         .catch(function(err){
           next(err);

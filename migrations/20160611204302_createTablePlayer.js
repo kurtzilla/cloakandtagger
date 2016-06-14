@@ -5,8 +5,6 @@ exports.up = function(knex, Promise) {
     table.timestamp('dtcreated').defaultTo(knex.fn.now());
     table.integer('userid').references('id').inTable('users');
     table.integer('gameid').references('id').inTable('games');
-    table.string('alias').notNullable().defaultTo('');
-    table.text('bio').notNullable().defaultTo('');
     table.string('lastlocation').notNullable().defaultTo('');
   });
 };

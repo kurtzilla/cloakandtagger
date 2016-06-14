@@ -15,7 +15,6 @@ var maps = require('./routes/maps');
 var photos = require('./routes/photos');
 var admin = require('./routes/admin');
 var games = require('./routes/games');
-var players = require('./routes/players');
 
 
 // establish app
@@ -62,13 +61,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/maps', maps);
 app.use('/photos', photos);
 app.use('/admin', admin);
 app.use('/games', games);
-app.use('/players', players);
 
 
 // catch 404 and forward to error handler

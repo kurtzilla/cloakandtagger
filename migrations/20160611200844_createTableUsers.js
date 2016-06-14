@@ -8,11 +8,12 @@ exports.up = function(knex, Promise) {
     table.string('password').notNullable();
     table.string('firstname').notNullable().defaultTo('');
     table.string('lastname').notNullable().defaultTo('');
+    table.string('alias').notNullable().defaultTo('');
+    table.text('bio').notNullable().defaultTo('');
     table.string('imageurl').notNullable().defaultTo('');
     table.string('loginprovider').notNullable();
     table.text('logintoken').notNullable().defaultTo('');
     table.timestamp('tokenexpiry');
-    table.timestamp('lastlogin');
   });
 };
 

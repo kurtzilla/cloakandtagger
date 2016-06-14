@@ -11,10 +11,6 @@ a {
   color: #00B7FF;
 }
 
-nav {
-  padding:.5em 2em;
-  height:100px !important;
-}
 
 nav h1 {
   font-size:2.5em;
@@ -27,9 +23,7 @@ nav a {
 nav a.active {
   color:#999;
 }
-nav a:after {
-  content: ' | ';
-}
+
 nav a:last-child:after {
   content: none;
 }

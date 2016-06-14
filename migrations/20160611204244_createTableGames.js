@@ -8,7 +8,6 @@ exports.up = function(knex, Promise) {
     table.string('imageurl').notNullable().defaultTo('');
     table.timestamp('dtstart').defaultTo(knex.fn.now());
     table.timestamp('dtend');
-    table.timestamp('dtactualend');
   });
 };
 

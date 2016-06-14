@@ -26,7 +26,7 @@ router.use(function(req,res,next){
 router.get('/', function(req, res, next) {
   // TODO make this query more customized - ie get user name, etc
   knex('games')
-  .select('id','dtcreated','hostuserid','title','dtstart','dtend','dtactualend')
+  .select('id','dtcreated','hostuserid','title','dtstart','dtend')
   .orderBy('id','desc')
   .then(function(data){
     res.render('games/listing', { siteSection: 'game', title: 'Games', rows: data, moment: moment });
@@ -187,9 +187,6 @@ router.get('/:gameid/join', function(req,res,next){
     .then(function(data){
 
       if(data){
-        // TODO redirect based on existence of image, bio and alias
-        // so if alias or bio or image are missing - go to player edit
-
         // for now just go to game details
         console.log('user already exists as a player in tihs game');
         res.redirect('/games/' + _gameid);
@@ -211,10 +208,8 @@ router.get('/:gameid/join', function(req,res,next){
           .first()
           .then(function(data){
             console.log('added player', data);
-            // redirect to add alias and bio and user image
-            // alias and bio will set session value for players
             req.session.player = data;
-            res.redirect('/players/' + data.id);
+            res.redirect('/games/' + _gameid);
           })
           .catch(function(err){
             next(err);

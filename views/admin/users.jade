@@ -17,7 +17,6 @@ block console
       th login
       th token
       th expiry
-      th lastlogin
     if rows
       each row in rows
         tr
@@ -32,4 +31,3 @@ block console
           td= row.loginprovider
           td= row.logintoken
           td= row.loginexpiry
-          td= row.lastlogin
