@@ -2,14 +2,15 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css")
+    
+    link(rel='stylesheet', href='/stylesheets/robstyle.css')
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
   body
   
     //- do some logging to debug
-    if user
-      p= user
+    //- if user
+    //-   p= user
       
     div(id="siteSection" class="#{siteSection} container")
       nav 
@@ -25,7 +26,7 @@ html
           if user
             a(href="/users/signout") signout
             if user && user.roles && user.roles.indexOf('admin') !== -1
-              a(href="/game") games
+              a(href="/games") games
               a(href="/admin") admin
     
       div(id="pageContent")

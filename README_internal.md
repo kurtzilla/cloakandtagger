@@ -39,8 +39,6 @@ Teddi Maull [7:43 PM]
 @rkurtz: I used Project Oxford which is part of this collection of APIs (https://www.microsoft.com/cognitive-services/en-us/documentation). I’m posting the link to their suite in case anyone finds inspiration in the choices :slightly_smiling_face:.  
 A link from my code journal directly to the actual API I used - https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f0375749c3f70a50e79b82
 
-[7:43]  
-Recommend…well it worked, haahahaha.
 
 
 

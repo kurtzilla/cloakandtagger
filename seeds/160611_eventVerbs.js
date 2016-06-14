@@ -16,6 +16,7 @@ exports.seed = function(knex, Promise) {
     knex('eventverbs').insert({name: 'targetTagged', description: 'a player target has been tagged'}),
     knex('eventverbs').insert({name: 'targetAssigned', description: 'a player target has been assigned'}),
     knex('eventverbs').insert({name: 'targetRemoved', description: 'a player target has been removed from the active player list'}),
+    knex('eventverbs').insert({name: 'gameCreated', description: 'a game has been created'}),
     knex('eventverbs').insert({name: 'gameStarted', description: 'a game has begun'}),
     knex('eventverbs').insert({name: 'gameEnded', description: 'a game has ended'}),
     knex('eventverbs').insert({name: 'gamePlayersAssigned', description: 'players have been assign to the active roster and their targets have been defined'}),
