@@ -13,7 +13,7 @@ router.get('/signup', function(req, res, next) {
 
 router.post('/signup', function(req, res, next) {
 
-  var _email = req.body.email.trim(); // note username = email
+  var _email = req.body.email.trim();  // note username = email
   var _pwd = req.body.password;
   var _errors = [];
 

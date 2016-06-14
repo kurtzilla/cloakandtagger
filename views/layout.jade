@@ -6,14 +6,14 @@ html
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
   body
-  
+
     //- do some logging to debug
     if user
       p= user
-      
+
     div(id="siteSection" class="#{siteSection} container")
-      nav 
-        h1 Cloak and Tagger  
+      nav
+        h1 Cloak and Tagger
         div(class="links")
           a(href="/") home
           if user
@@ -26,18 +26,18 @@ html
             a(href="/users/signout") signout
             if user && user.roles && user.roles.indexOf('admin') !== -1
               a(href="/admin") admin
-    
+
       div(id="pageContent")
         block content
-  
-    
-    
+
+
+
     //- script(src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous")
     script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js")
-    
+
     if siteSection == 'maps'
-      script(src="/javascripts/maps.js")  
+      script(src="/javascripts/maps.js")
       script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
-      
+      script(src="https://cdn.auth0.com/js/lock-9.1.js")
     script(src="/javascripts/client.js")
