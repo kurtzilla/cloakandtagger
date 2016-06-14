@@ -2,10 +2,15 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var cookieSession = require('cookie-session');
+
 var knex = require('./db/knex');
+
+var cookieSession = require('cookie-session');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var strategy = require('./routes/auth');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
 
 
 // include route files
@@ -70,6 +75,26 @@ app.use('/admin', admin);
 app.use('/games', games);
 
 
+app.use(cookieParser());
+// See express session docs for information on the options: https://github.com/expressjs/session
+app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Auth0 callback handler
+app.get('/callback',
+  passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
+  function(req, res) {
+    if (!req.user) {
+      throw new Error('user null');
+    }
+    res.redirect("/user");
+  });
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -100,6 +125,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

@@ -3,18 +3,16 @@ extends ../layout
 block content
   h4 Signin
   
-  if error
-    ul(class="error-list error")
-      each msg in error
-        li= msg
-        
-  form(action='/users/signin' method='POST')
-    p
-      input(type='text' placeholder='Email' name='email')
-    p
-      input(type='password' placeholder='Password' name='password')
-    p
-      div TODO captcha?
-    p
-      input(type='submit' value='Sign In' class="waves-effect waves-light btn")
+  
+  script(src='https://cdn.auth0.com/js/lock-9.1.min.js')
+  script(type='text/javascript').
+    var lock = new Auth0Lock('GQYyzhNN70BQvNQrgaBSherDLANesAYV', 'samcate.auth0.com');
+    lock.show({
+      icon: 'http://simpleicon.com/wp-content/uploads/tag-2.png'
+      , callbackURL: 'http://localhost:3000'
+    , responseType: 'code'
+    , authParams: {
+    scope: 'openid email'  // Learn about scopes: https://auth0.com/docs/scopes
+    }
+    });
     
