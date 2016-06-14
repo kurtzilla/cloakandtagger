@@ -3,17 +3,26 @@ html
   head
     title= title
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css")
-    link(rel='stylesheet', href='/stylesheets/style.css')
     link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+    link(rel='stylesheet', href='/stylesheets/style.css')
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
-      
-    
-  body 
+  body
+    div(class="hiddeninfo")
+      if user
+        input(type="hidden" id="userid" value="#{user.id}")
+      else
+        input(type="hidden" id="userid" value="0")
+        
+      input(type="hidden" id="userlocale" value="")
+      input(type="hidden" id="targetlocale" value="")
+  
+
     //- div(class="video-container")
     //-   div(class="filter")
     //-     video(autoplay loop class="fillWidth")
     //-       source(src="PATH_TO_MP4" type="video/mp4" /)
     //-       source(src="PATH_TO_MP4" type="video/mp4" /)
+
     //- do some logging to debug
     //- if user
     //-   p= user
@@ -60,11 +69,9 @@ html
               li
                 a(href="/maps") maps
                 a(href="/photos") photos
-            
-          
-          if user && user.roles && user.roles.indexOf('admin') !== -1
-            li
-              a(href="/admin") admin
+              if user.roles && user.roles.indexOf('admin') !== -1
+                li
+                  a(href="/admin") admin
             
     main
       div(id="pageContent")
@@ -75,12 +82,10 @@ html
         div(id="tag") TAG
     
     
-    //- script(src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous")
     script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js")
     
-    if siteSection == 'maps'
-      script(src="/javascripts/maps.js")  
-      script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
+    script(src="/javascripts/maps.js")  
+    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
       
     script(src="/javascripts/client.js")

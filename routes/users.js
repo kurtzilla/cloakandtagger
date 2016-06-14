@@ -4,6 +4,127 @@ var router = express.Router();
 var knex = require('../db/knex');
 var bcrypt = require('bcrypt');
 var enums = require('../lib/enums');
+var multer  = require('multer');
+var upload = multer({ dest: 'upfiles/' });
+var del = require('del');
+var cloudinary = require('cloudinary');
+
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+
+
+router.use(function(req,res,next){
+  // console.log('users router');
+  next();
+});
+
+// return a list of users
+router.get('/', function(req, res, next){
+  knex('users')
+  .orderBy('email')
+  .then(function(data){
+    res.render('users/userlisting', { siteSection: 'users', title: 'User List', rows: data });
+  })
+  .catch(function(err){
+    next(err);
+  });
+});
+
+//show user's details
+router.get('/:id', function(req,res,next){
+  knex('users')
+  .where({ id: parseInt(req.params.id)})
+  .first()
+  .then(function(data){
+    res.render('users/user', { siteSection: 'users', title: 'User Details', user: data });
+  })
+  .catch(function(err){
+    next(err);
+  });
+});
+
+router.post('/:id', upload.any(), function(req,res,next){
+  //res.send('posted to user');
+
+  knex('users')
+  .where({id:parseInt(req.params.id)})
+  .first()
+  .then(function(user){
+
+    //verify inputs
+    var _firstname = req.body.firstname.trim();
+    var _lastname = req.body.lastname.trim();
+    var _tempDestination = (req.files && req.files[0] && req.files[0].path) ? req.files[0].path : '';
+    var _existingImage = user.imageurl;
+    var _errors = [];
+
+    if(_firstname.length === 0){
+      _errors.push('First name is required');
+    }
+    if(_lastname.length === 0){
+      _errors.push('Last name is required');
+    }
+    // only validate if no user image
+    if(_existingImage.length === 0 && _tempDestination.length === 0){
+      _errors.push('Image is required');
+    }
+
+    // return on error
+    if(_errors.length > 0){
+      console.log('user errors: ', _errors);
+      res.render('users/' + req.params.id, { siteSection: 'users', title: 'User Details',
+        user: user, error: _errors });
+    } else {
+
+      // if a new image was specified....we have already determined that one or the other exists
+      if(_tempDestination.length > 0){
+        //update image first
+        cloudinary.uploader.upload(
+          _tempDestination,
+          function(result) {
+            knex('users')
+            .where({id: parseInt(req.session.user.id)})
+            .update({
+              firstname: _firstname,
+              lastname: _lastname,
+              imageurl: result.url
+            })
+            .then(function(data){
+
+              del([_tempDestination]);
+
+              res.redirect('/users/' + req.params.id);
+            })
+            .catch(function(err){
+              next(err);
+            });
+          }
+        );
+      } else {
+        knex('users')
+        .where({id: parseInt(req.session.user.id)})
+        .update({
+          firstname: _firstname,
+          lastname: _lastname
+        })
+        .then(function(data){
+          res.redirect('/users/' + req.params.id);
+        })
+        .catch(function(err){
+          next(err);
+        });
+      }
+    }
+  })
+  .catch(function(err){
+    next(err);
+  });
+});
 
 // facilitate signup
 router.get('/signup', function(req, res, next) {
