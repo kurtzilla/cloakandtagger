@@ -20,4 +20,85 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+  height: 120px;
+}
+
+// #siteSection.container{
+//   /*border:solid red 1px;*/
+//   /*padding: 0;
+//   margin:0;*/
+//   width:100%;
+//   min-width:400px;
+//   max-width:760px;
+// }
+//
+// a {
+//   color: #00B7FF;
+// }
+//
+//
+// nav h1 {
+//   font-size:2.5em;
+//   padding:0;
+//   margin:5px 0 0 0;
+// }
+//
+// nav a {
+// }
+// nav a.active {
+//   color:#999;
+// }
+//
+// nav a:last-child:after {
+//   content: none;
+// }
+//
+// div.links {
+//   margin-left:0;
+//   line-height:3.5em;
+// }
+//
+// #pageContent{
+//   padding:15px;
+// }
+
+#map {
+  border:solid #666 2px;
+  width:250px;
+  height:250px;
+}
+
+#locale {
+  line-height:2em;
+}
+
+#locale span {
+  /*border:solid #999 1px;*/
+  padding:5px;
+  display:inline-block;
+  margin-right:15px;
+}
+
+.error {
+  color: #FF0000;
+  opacity: 50%;
+}
+
+.admin-selects{
+  background-color: #eee;
+}
+
+// .game-creation{
+//   padding:15px;
+// }
+.all-game-info{
+  /*border:solid red 1px;*/
+  background-color:#eee;
+  line-height:3em;
+}
+.file-upload-label {
+  font-size:1.1em;
+  color:#999;
+  opacity:.5;
+  margin-right:10px;
 }
