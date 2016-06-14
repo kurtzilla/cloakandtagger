@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cookieSession = require('cookie-session');
 var knex = require('./db/knex');
-
+var tabris = require('tabris');
 
 // include route files
 var routes = require('./routes/index');
@@ -20,15 +20,15 @@ var admin = require('./routes/admin');
 var app = express();
 
 // tabris app setup
-var page = new tabris.Page({
-  topLevel: true,
-  title: "app"
-});
-new tabris.TextView({
-  layoutData: {centerX: 0, centerY: 0},
-  text: "My First App"
-}).appendTo(page);
-page.open();
+  // var page = new tabris.Page({
+  //   topLevel: true,
+  //   title: "app"
+  // });
+  // new tabris.TextView({
+  //   layoutData: {centerX: 0, centerY: 0},
+  //   text: "My First App"
+  // }).appendTo(page);
+  // page.open();
 
 app.use(cookieSession(
   {
@@ -41,35 +41,10 @@ app.use(cookieSession(
   }
 ));
 
-
-// middleware to handle session setup - persist session info
-app.use(function(req,res,next){
-
-  // if(Array.isArray(req.session.userId)){
-  //   req.session.userId = req.session.userId[0];
-  // }
-  //
-  // if(req.session.userId){
-  //   knex('users')
-  //     .where({id:req.session.userId})
-  //     .first()
-  //     .then(function(data){
-  //       if(data){
-  //         res.locals.user = data;
-  //         next();
-  //       } else {
-  //         res.locals.user = {username:'Guest'};
-  //       }
-  //   });
-  // } else {
-  //   res.locals.user = {username:'Guest'};
-  //   next();
-  // }
-
-  //console.log('session user', req.session.user);
-  res.locals.user = req.session.user;
-  next();
-});
+//   //console.log('session user', req.session.user);
+//   res.locals.user = req.session.user;
+//   next();
+// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -119,7 +94,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 
 module.exports = app;
