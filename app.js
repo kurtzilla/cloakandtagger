@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 
 var knex = require('./db/knex');
+<<<<<<< HEAD
 
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
@@ -12,6 +13,9 @@ var strategy = require('./routes/auth');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
+=======
+var tabris = require('tabris');
+>>>>>>> e238d34638ecf648e116cf7795c79b6755d601fb
 
 // include route files
 var routes = require('./routes/index');
@@ -25,7 +29,16 @@ var games = require('./routes/games');
 // establish app
 var app = express();
 
-
+// tabris app setup
+  // var page = new tabris.Page({
+  //   topLevel: true,
+  //   title: "app"
+  // });
+  // new tabris.TextView({
+  //   layoutData: {centerX: 0, centerY: 0},
+  //   text: "My First App"
+  // }).appendTo(page);
+  // page.open();
 
 app.use(cookieSession(
   {
@@ -37,7 +50,6 @@ app.use(cookieSession(
     ]
   }
 ));
-
 
 // middleware to handle session setup - persist session info
 app.use(function(req,res,next){
