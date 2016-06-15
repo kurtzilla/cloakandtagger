@@ -24,13 +24,13 @@ function initMap() {
       userlocale.innerHTML = JSON.stringify(userPos);
 
       console.log('UserId: ', userId);
-      if(parseInt(userId.val()) > 0){
+      if(parseInt(userId.innerText) > 0){
         // update db
         // retrieve any target info as well
       }
 
       // if we have a map div
-      if(mapDiv.length > 0){
+      if(mapDiv){
 
         if(map == undefined) {
           var myOptions = {
@@ -55,18 +55,18 @@ function initMap() {
 
         // redraw markers
         userMarker = new google.maps.Marker({
-          position: latLng,
+          position: userPos,
           map: map
         });
 
         targetMarker = new google.maps.Marker({
-          position: latLng,
+          position: userPos,
           map: map
         });
 
 
 
-      }
+      },
       function(err){
         // log any errors
         errorDiv.innerHTML = 'getCurrentPositionError: ' + err;

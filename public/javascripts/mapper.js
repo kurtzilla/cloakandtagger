@@ -1,4 +1,14 @@
 
+
+/*
+
+this file is a copy of the old working version
+
+*/
+
+
+
+
 function initMap() {
 
   var errorDiv = document.querySelector('p.error');
