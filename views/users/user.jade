@@ -17,9 +17,14 @@ block content
       p
         input(type="text" name="lastname" required placeholder="Last Name" value="#{user.lastname}")
       p
+        input(type="text" name="alias" required placeholder="Choose your Alias" value="#{user.alias}")
+      p
+        input(type="text" name="bio" required placeholder="Bio" value="#{user.bio}")
+      p
         img(src="#{user.imageurl}" width="150" height="150")
       p
         label(for"image" class="file-upload-label") Image
         input(type="file" name="image" class="waves-effect waves-light btn")
       p 
         input(type="submit" value="Update User" class="waves-effect waves-light btn")
+        
