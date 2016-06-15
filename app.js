@@ -6,9 +6,9 @@ var knex = require('./db/knex')
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var strategy = require('./routes/auth');
-var session = require('express-session');
+var strategy = require('./routes/setup-passport.js');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
 // include route files
 var routes = require('./routes/index');
@@ -17,6 +17,8 @@ var maps = require('./routes/maps');
 var photos = require('./routes/photos');
 var admin = require('./routes/admin');
 var games = require('./routes/games');
+
+
 
 
 // establish app
@@ -71,6 +73,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cookieParser());
+// See express session docs for information on the options: https://github.com/expressjs/session
+app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', routes);
 app.use('/users', users);
@@ -78,24 +85,60 @@ app.use('/maps', maps);
 app.use('/photos', photos);
 app.use('/admin', admin);
 app.use('/games', games);
+// app.use('/user', user);
+// app.use('/setup-passport', passport);
+// app.use('/auth', auth);
 
 
-app.use(cookieParser());
-// See express session docs for information on the options: https://github.com/expressjs/session
-app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Auth0 callback handler
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
   function(req, res) {
-    if (!req.user) {
-      throw new Error('user null');
+    console.log('User' + JSON.stringify(req.user.name));
+    //TODO:All Signup/login logic
+    //TODO:If New - Insert into DB, return user ID, set req.session.id
+    //TODO:Else - get user ID - set req.session.id
+    if (!req.session.user) {
+      // console.log(req.user.Profile);
+      // req.session.user = req.user.Profile.id;
+      knex('users')
+      .insert({
+        // email: req.user.email.toLowerCase(),
+        id: JSON.stringify(req.user.id),
+        // password: req.user.password // encrypt the pass for db storage
+        // roles: JSON.stringify([enums.userRole[0]]),
+        // loginprovider: enums.loginProvider[0]
+      })
+      .then(function(id) {
+
+        // log an event - don't bother with return, promise, etc
+        console.log(id)
+        knex('userevents').insert({
+          status: enums.eventStatus[1],
+          userid: parseInt(id),
+          eventverb: 'signup',
+          newvalue: _email.toLowerCase(),
+          description: 'new user signup',
+          ipaddress: req.connection.remoteAddress
+        })
+      })
+      .catch(function(err){
+        console.log(err);
+      })
+      console.log(req.session.user + "test")
     }
-    res.redirect("/user");
+    // res.redirect("/user");
+    res.send();
   });
+
+app.get('/user', function (req, res) {
+  // console.log(req.user);
+  res.render('users/user', {
+    user: req.user
+  });
+});
 
 
 // catch 404 and forward to error handler

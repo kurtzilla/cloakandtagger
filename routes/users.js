@@ -196,6 +196,14 @@ router.post('/signin', function(req,res,next) {
 
 });
 
+router.get('/auth0', function(req, res, next) {
+  res.render('users/auth0', { siteSection: 'users', title: 'Auth0' } );
+});
+
+router.get('/testUser', function(req,res,next) {
+  res.send(JSON.stringify(req.session));
+});
+
 // facilitate signout
 router.get('/signout', function(req, res, next) {
   // TODO remove any session keys - finer grained
