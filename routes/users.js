@@ -109,7 +109,7 @@ router.post('/signup', function(req, res, next) {
               // get rid of pwd in session object
               data.password = null;
               req.session.user = data;
-              res.redirect('/');
+              res.redirect('/users/' + data.id);
             })
             .catch(function(err) {
               next(err);
@@ -123,14 +123,12 @@ router.post('/signup', function(req, res, next) {
           next(err);
         });
       }
-
     })
     .catch(function(err) {
       // error on uniqe username db call
       next(err);
     });
   }
-
 });
 
 
@@ -180,7 +178,7 @@ router.post('/signin', function(req,res,next) {
           // get rid of pwd in session object
           data.password = null;
           req.session.user = data;
-          res.redirect('/');
+          res.redirect('/users/' + data.id);
         })
         .catch(function(err){
           next(err);
@@ -230,6 +228,8 @@ router.post('/:id', upload.any(), function(req,res,next){
     //verify inputs
     var _firstname = req.body.firstname.trim();
     var _lastname = req.body.lastname.trim();
+    var _alias = req.body.alias.trim();
+    var _bio = req.body.bio.trim();
     var _tempDestination = (req.files && req.files[0] && req.files[0].path) ? req.files[0].path : '';
     var _existingImage = user.imageurl;
     var _errors = [];
@@ -240,6 +240,9 @@ router.post('/:id', upload.any(), function(req,res,next){
     if(_lastname.length === 0){
       _errors.push('Last name is required');
     }
+
+    // TODO validation rules for alias and bio
+
     // only validate if no user image
     if(_existingImage.length === 0 && _tempDestination.length === 0){
       _errors.push('Image is required');
@@ -263,6 +266,8 @@ router.post('/:id', upload.any(), function(req,res,next){
             .update({
               firstname: _firstname,
               lastname: _lastname,
+              alias: _alias,
+              bio: _bio,
               imageurl: result.url
             })
             .then(function(data){
@@ -277,11 +282,14 @@ router.post('/:id', upload.any(), function(req,res,next){
           }
         );
       } else {
+        //other wise just update profile info with out concerning image
         knex('users')
         .where({id: parseInt(req.session.user.id)})
         .update({
           firstname: _firstname,
-          lastname: _lastname
+          lastname: _lastname,
+          alias: _alias,
+          bio: _bio
         })
         .then(function(data){
           res.redirect('/users/' + req.params.id);
