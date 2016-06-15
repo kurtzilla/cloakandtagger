@@ -20,3 +20,13 @@ router.get('/testgamedetail', function(req, res, next) {
 router.get('/testgameplay', function(req, res, next) {
   res.render('gameplay/gameplay');
 })
+router.get('/testgameplayhunt', function(req, res, next) {
+  console.log('Yo!');
+  res.render('gameplay/includes/hunt');
+})
+router.get('/testgameplaydossier', function(req, res, next) {
+  res.render('gameplay/includes/dossier');
+})
+router.get('/testgameplaygame', function(req, res, next) {
+  res.render('gameplay/includes/game');
+})

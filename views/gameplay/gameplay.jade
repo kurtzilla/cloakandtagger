@@ -2,20 +2,21 @@ extends ../layout
 
 block content
   // TODO: 
-  
-  div(class="row")
-    div(class="col s12")
-      ul(class="tabs")
-        li(class="tab col s3")
-          a(href="#test1") Hunt
-        li(class="tab col s3")
-          a(class="active" href="#test2") Target
-        li(class="tab col s3")
-          a(href="#test3") Game
-  // TODO: Footer for TAG button
-  
-  //- block content
-  footer(id="footer" class="page-footer")
+  main
+    div(class="row")
+      div(class="col s12")
+        ul(class="tabs")
+          li(id="hunt" class="tab col s3")
+            a(class="active" href="#") Hunt
+          li(id="dossier" class="tab col s3")
+            a(href="#") Dossier
+          li(id="game" class="tab col s3")
+            a(href="#") Game
+    div(id="gameplayContent")
+      div TEST
+          
+  footer(class="page-footer")
     div(class="container")
-  //- div(class="footer-copyright") 
-      //- div(id="tag") TAG
+      div(class="row")
+        div(class="col l6 s12")
+          h3(id="tag" class="white-text") TAG
