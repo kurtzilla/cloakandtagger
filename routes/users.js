@@ -8,6 +8,7 @@ var multer  = require('multer');
 var upload = multer({ dest: 'upfiles/' });
 var del = require('del');
 var cloudinary = require('cloudinary');
+var request = require("request");
 
 
 cloudinary.config({
@@ -220,6 +221,8 @@ router.get('/:id', function(req,res,next){
 router.post('/:id', upload.any(), function(req,res,next){
   //res.send('posted to user');
 
+  var faceDetectInput = "";
+
   knex('users')
   .where({id:parseInt(req.params.id)})
   .first()
@@ -232,6 +235,8 @@ router.post('/:id', upload.any(), function(req,res,next){
     var _bio = req.body.bio.trim();
     var _tempDestination = (req.files && req.files[0] && req.files[0].path) ? req.files[0].path : '';
     var _existingImage = user.imageurl;
+    var _faceinfo = "";
+    console.log(_faceinfo);
     var _errors = [];
 
     if(_firstname.length === 0){
@@ -261,6 +266,7 @@ router.post('/:id', upload.any(), function(req,res,next){
         cloudinary.uploader.upload(
           _tempDestination,
           function(result) {
+          // faceDetectInput = result.url;
             knex('users')
             .where({id: parseInt(req.session.user.id)})
             .update({
@@ -269,6 +275,7 @@ router.post('/:id', upload.any(), function(req,res,next){
               alias: _alias,
               bio: _bio,
               imageurl: result.url
+              // faceinfo:
             })
             .then(function(data){
 

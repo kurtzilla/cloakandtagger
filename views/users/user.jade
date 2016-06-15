@@ -20,11 +20,11 @@ block content
         input(type="text" name="alias" required placeholder="Choose your Alias" value="#{user.alias}")
       p
         input(type="text" name="bio" required placeholder="Bio" value="#{user.bio}")
-      p
-        img(src="#{user.imageurl}" width="150" height="150")
-      p
+      p(class="user-upload-frame")
+        img(src="#{user.imageurl}" id="user-upload")
+      p(class="user-upload-frame")
         label(for"image" class="file-upload-label") Image
         input(type="file" name="image" class="waves-effect waves-light btn")
-      p 
+      p(class="user-upload-frame")
         input(type="submit" value="Update User" class="waves-effect waves-light btn")
         
