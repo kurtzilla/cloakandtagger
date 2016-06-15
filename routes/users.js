@@ -287,6 +287,11 @@ router.post('/:id', upload.any(), function(req,res,next){
             .catch(function(err){
               next(err);
             });
+          },
+          {
+            crop: 'fit',
+            width: 200,
+            height: 200
           }
         );
       } else {
