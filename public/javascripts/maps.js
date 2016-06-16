@@ -1,6 +1,7 @@
 
 var map;
 var mapDiv = document.getElementById('map');
+var gError = document.getElementById('geoerror');
 var boulderCO = {"lat":40.0179492,"lng":-105.2821528}; // downtown
 
 var userId = document.getElementById('userid');
@@ -13,11 +14,11 @@ function initMap(){
 }
 
 function drawMap(centerPos){
-  console.log('centerPos', centerPos);
+  // console.log('centerPos', centerPos);
   if(mapDiv){
-    console.log('draw the map', centerPos);
+    // console.log('draw the map', centerPos);
     var _pos = centerPos || new google.maps.LatLng(boulderCO);
-    console.log('pos is now', _pos);
+    //console.log('pos is now', _pos);
 
     if(map == undefined) {
       var mapOptions = {
@@ -29,7 +30,7 @@ function drawMap(centerPos){
       map = new google.maps.Map(mapDiv, mapOptions);
     }
     else {
-      console.log('panning map to', _pos);
+      //console.log('panning map to', _pos);
       map.panTo(_pos);
     }
 
@@ -49,27 +50,28 @@ function drawMap(centerPos){
 $(function(){
 
   if (navigator && navigator.geolocation) {
+    if(gError){
+      gError.innerHTML = 'navigator.geolocation is available';
+    } else {
+      console.log('navigator.geolocation is available');
+    }
+
 
     var watchId = navigator.geolocation.watchPosition(function(position) {
+      if(gError){
+        gError.innerHTML = ' watching Position: ' + new Date().toISOString();
+      } else {
+        console.log(' watching Position: ' + new Date().toISOString());
+      }
 
       var _userId = parseInt(userId.value);
       var _userPos = new google.maps.LatLng(
         position.coords.latitude,
         position.coords.longitude);
 
-
       //ajax call to record location
       var _url = window.location.origin + '/locale/user/1';
-
-      // console.log('User Pos', _userPos);
-      // console.log('User Pos', _userPos.toString());
-      // console.log('User Pos', JSON.stringify(_userPos));
-      // console.log('User Pos', JSON.parse(_userPos));
-
-      // var dataArray = [];
-      // dataArray.push({'userPos': JSON.stringify(_userPos)});
-
-      console.log('URL', _url);
+      console.log('google watchPosition: ' + new Date().toISOString() + ' @ ' + _userPos);
       $.ajax({
         method: 'POST',
         url: _url,
@@ -77,10 +79,10 @@ $(function(){
         data: _userPos.toJSON()
       })
       .done(data =>{
-        console.log('returned data', data, data.lat, data.lng);
+        //console.log('returned data', data, data.lat, data.lng);
         if(data.lat !== '0' && data.lng !== '0'){
           var d = new google.maps.LatLng(parseFloat(data.lat), parseFloat(data.lng));
-          console.log('transformed locale', d);
+          //console.log('transformed locale', d);
           //reset markers
           markers = [];
           markers.push(d);
@@ -88,14 +90,13 @@ $(function(){
         }
       });
 
-
-      // .catch(err =>{
-      //   console.log('ajax error calling locale', err);
-      // });
-
-      // drawMap(_userPos);
-
     });// end of watchPosition
+  } else {
+    if(gError){
+      gError.innerHTML = 'no navigator or no navigator.geolocation';
+    } else {
+      console.log('no navigator or no navigator.geolocation');
+    }
   }
 
 });

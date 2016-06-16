@@ -16,12 +16,7 @@ html
       input(type="hidden" id="userlocale" value="")
       input(type="hidden" id="targetlocale" value="")
   
-
-    //- div(class="video-container")
-    //-   div(class="filter")
-    //-     video(autoplay loop class="fillWidth")
-    //-       source(src="PATH_TO_MP4" type="video/mp4" /)
-    //-       source(src="PATH_TO_MP4" type="video/mp4" /)
+  
 
     //- do some logging to debug
     //- if user
@@ -34,21 +29,21 @@ html
           a(href="/" class="left brand-logo") Logo
           a(href="#" data-activates="slide-out" class="right button-collapse")
             i(class="left material-icons") menu
-          //- div(class="links")
-            //- img(src="../images/ic_menu_black_24dp")
           ul(id="slide-out" class="side-nav right")
             div(id='menu-list')
             li
+              a(id="modalTest" href="") Modal Test
               a(href="#" data-activates="slide-out" class="right button-collapse")
-                i(class="material-icons") clear
+                //- i(class="material-icons") clear
+                //- 
             if user
               li
                 a(href="/users/signout") signout
               hr
               li
-                a(href="/testgameplayhunt") Hunt
+                a(href="/testgameplay") Hunt
               li
-                a(href="/testgamelist") Join
+                a(href="/join") Join
               li
                 a(href="/signout") Host
             if !user
@@ -59,12 +54,6 @@ html
               a(href="/") About
             li
               a(href="/") Rules
-            li
-              a(href="/") Privacy
-            li
-              a(href="/") FAQ
-            li
-              a(href="/") Legal
             if user
               li
                 a(href="/maps") maps
@@ -72,11 +61,22 @@ html
               if user.roles && user.roles.indexOf('admin') !== -1
                 li
                   a(href="/admin") admin
-            
-    //- main
+  
+    //- DANGER MODAL
+    //- a(class="waves-effect waves-light btn modal-trigger" href="#modal1") Modal
+
+    div(id="modal1" class="modal")
+      div(class="modal-content")
+        h4 DANGER!
+        p Someone is hunting you and they are very close. Close your Cloak&Tagger app to hide your location and get to safety immediately!
+      div(class="modal-footer")
+        a(href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat") I Understand
+    
+    
+        
     //-   div(id="pageContent")
     block content
-    
+  
     
     
     script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")

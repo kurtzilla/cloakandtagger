@@ -19,7 +19,7 @@ function faceDetectAPI(imageurl) {
 
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
-    console.log(body);
+    return(body);
   });
 }
 
@@ -43,8 +43,16 @@ function faceVerifyAPI() {
   });
 }
 
-faceDetectAPI(faceDetectInput).then(faceVerifyAPI);
-faceVerifyAPI()
+var promise = new Promise(function(resolve, reject) {
+  reject(new Error('error'));
+  resolve('success');
+  return 
+})
+
+faceDetectAPI(faceDetectInput).then(function(data) {
+  console.log(data);
+});
+// faceVerifyAPI()
 
 
 // request(options, function (error, response, body) {

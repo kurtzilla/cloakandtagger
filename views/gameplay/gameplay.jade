@@ -3,7 +3,7 @@ extends ../layout
 block content
   // TODO: 
   main
-    div(class="row")
+    div(id="huntNav" class="row")
       div(class="col s12")
         ul(class="tabs")
           li(id="hunt" class="tab col s3")
@@ -14,9 +14,9 @@ block content
             a(href="#") Game
     div(id="gameplayContent")
       div TEST
-          
-  footer(class="page-footer")
-    div(class="container")
-      div(class="row")
-        div(class="col l6 s12")
-          h3(id="tag" class="white-text") TAG
+  a(href="/tagphoto")        
+    footer(class="page-footer")
+      div(class="container")
+        div(class="row")
+          div(class="col l6 s12")
+            h3(id="tag" class="white-text") TAG
