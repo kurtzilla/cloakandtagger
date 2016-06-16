@@ -1,5 +1,7 @@
 var requiresLogin = require('requiresLogin');
 
+console.log('user');
+
 app.get('/user',
   requiresLogin,
   function (req, res) {
