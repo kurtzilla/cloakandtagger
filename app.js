@@ -104,9 +104,6 @@ app.get('/callback',
       email,
       name;
 
-      gEmail = email;
-      gName = name;
-
       req.session.secret = accessToken;
       console.log('session token = ' + req.session.secret);
 
@@ -176,9 +173,6 @@ app.get('/callback',
         email,
         name;
 
-        gEmail = email;
-        gName = name;
-
         req.session.secret = accessToken;
         console.log('session token = ' + req.session.secret);
 
@@ -222,13 +216,8 @@ app.get('/callback',
             req.session.user = data;
           }
         })
-      }
-      // createUser(req,res);
+      }  // createUser(req,res);
     }
-    // }
-    // console.log(req.session.user);
-    // createUser(req,res);
-  // res.redirect("/user");
   res.send();
 });
 
