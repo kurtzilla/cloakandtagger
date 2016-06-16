@@ -169,21 +169,42 @@ router.get('/:id', function(req, res, next){
 });
 
 // will add up to ten players
-router.get('/:gameid/addallusers', function(req,res,next){
+router.get('/:gameid/seedgame', function(req,res,next){
   var _gameid = parseInt(req.params.gameid);
 
-  // gereate up to ten users
+
+  // delete any active players and players from game
+  knex('activeplayers').delete().run();
+  knex('players').delete().run();
+  // delete any existing player data
+
+
+  // generate up to ten users
   knex.select('*')
   .from('users')
   .limit(10)
   .then(function(rows) {
     // console.log('user list length', rows.length);
 
+    var seedLocations = [
+      {"lat":"40.0179359","lng":"-105.28214609999998"},
+      {"lat":"40.0177793","lng":"-105.2819998"},
+      {"lat":"40.0133969","lng":"-105.2772375"},
+      {"lat":"40.0126173","lng":"-105.2807338"},
+      {"lat":"40.0177793","lng":"-105.2819998"},
+      {"lat":"40.0177883","lng":"-105.2819998"},
+      {"lat":"40.0179121","lng":"-105.2782299"},
+      {"lat":"40.0095857","lng":"-105.2828088"},
+      {"lat":"40.0177793","lng":"-105.2810098"},
+      {"lat":"39.9973033","lng":"-105.2741486"},
+      {"lat":"40.0644673","lng":"-105.283738"}
+    ];
+
     // first create players to insert
     var ins = [];
     for(var i=0;i<rows.length;i++){
       var row = rows[i];
-      ins.push({userid:row.id, gameid: _gameid});
+      ins.push({userid:row.id, gameid: _gameid, lastlocation:seedLocations[i]});
     }
 
     // console.log('here is array of users to insert', ins);

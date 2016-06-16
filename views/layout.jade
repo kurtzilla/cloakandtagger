@@ -4,8 +4,11 @@ html
     title= title
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css")
     link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+    link(href='https://fonts.googleapis.com/css?family=Playfair+Display+SC' rel='stylesheet' type='text/css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/materialize.css')
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    
   body
     div(class="hiddeninfo")
       if user
@@ -26,16 +29,15 @@ html
       //- h2 Cloak and Tagger 
       div(class="navbar-fixed")
         nav 
-          a(href="/" class="left brand-logo") Logo
-          a(href="#" data-activates="slide-out" class="right button-collapse")
+          a(href="/" class="left brand-logo cloakandtagger" id="logo") Cloak & Tagger
+          a(href="#" data-activates="slide-out" class="right button-collapse show-on-large")
             i(class="left material-icons") menu
           ul(id="slide-out" class="side-nav right")
             div(id='menu-list')
             li
-              a(id="modalTest" href="") Modal Test
+              //- a(id="modalTest" href="") Modal Test
               a(href="#" data-activates="slide-out" class="right button-collapse")
                 //- i(class="material-icons") clear
-                //- 
             if user
               li
                 a(href="/users/signout") signout
@@ -49,15 +51,12 @@ html
             if !user
               li
                 a(href="/users/signin") signin
-                a(href="/users/signup") signup  
+                a(href="/users/auth0") auth0  
             li
               a(href="/") About
             li
               a(href="/") Rules
             if user
-              li
-                a(href="/maps") maps
-                a(href="/photos") photos
               if user.roles && user.roles.indexOf('admin') !== -1
                 li
                   a(href="/admin") admin
@@ -71,6 +70,13 @@ html
         p Someone is hunting you and they are very close. Close your Cloak&Tagger app to hide your location and get to safety immediately!
       div(class="modal-footer")
         a(href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat") I Understand
+        
+    div(id="eliminated" class="modal")
+      div(class="modal-content")
+        h4 GAME OVER!
+        p You have been tagged and eliminated from the game. Thank you for your valiant efforts. Better luck next time.
+      div(class="modal-footer")
+        a(href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat") I Understand
     
     
         
@@ -80,10 +86,11 @@ html
     
     
     script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js")
-    
     script(src="/javascripts/maps.js")  
     script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js")
+    
+    
       
     script(src="https://cdn.auth0.com/js/lock-9.1.js")
     script(src="/javascripts/client.js")

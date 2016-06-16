@@ -1,11 +1,10 @@
 extends ../layout
 
 block content
-  img(src='../../images/boulder.jpg')
+  img(src=game.imageurl)
   ul
-    li Game Location: {title}
-    li Start Date: {dtstart}
+    li Game Location: #{game.title}
+    li Start Date: #{game.dtstart}
     li Number of players: {}
-    li Players left: {}
       
   a(class="waves-effect waves-light btn") Join
