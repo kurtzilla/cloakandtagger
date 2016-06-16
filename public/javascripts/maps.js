@@ -1,80 +1,102 @@
 
-function initMap() {
+var map;
+var mapDiv = document.getElementById('map');
+var gError = document.getElementById('geoerror');
+var boulderCO = {"lat":40.0179492,"lng":-105.2821528}; // downtown
 
-  var errorDiv = document.querySelector('p.error');
-  var userId = document.getElementById('userid');
-  var userlocale = document.getElementById('userlocale');
-  var targetlocale = document.getElementById('targetlocale');
-  var mapDiv = document.getElementById('map');
-  var map;
-  var userMarker;
-  var targetMarker;
+var userId = document.getElementById('userid');
+var markers = [];
 
 
-  // if we have access to the api on this device
+// google request call
+function initMap(){
+    drawMap();
+}
+
+function drawMap(centerPos){
+  // console.log('centerPos', centerPos);
+  if(mapDiv){
+    // console.log('draw the map', centerPos);
+    var _pos = centerPos || new google.maps.LatLng(boulderCO);
+    //console.log('pos is now', _pos);
+
+    if(map == undefined) {
+      var mapOptions = {
+        zoom: 14,
+        center: _pos,
+        tilt: 45,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+      map = new google.maps.Map(mapDiv, mapOptions);
+    }
+    else {
+      //console.log('panning map to', _pos);
+      map.panTo(_pos);
+    }
+
+    // add in the markers array
+    for(var i=0;i<markers.length;i++){
+      new google.maps.Marker({
+        position: markers[i],
+        map: map
+      });
+    }
+
+  } else {
+    // console.log('no map found');
+  }
+}
+
+$(function(){
+
   if (navigator && navigator.geolocation) {
+    if(gError){
+      gError.innerHTML = 'navigator.geolocation is available';
+    } else {
+      console.log('navigator.geolocation is available');
+    }
+
 
     var watchId = navigator.geolocation.watchPosition(function(position) {
+      if(gError){
+        gError.innerHTML = ' watching Position: ' + new Date().toISOString();
+      } else {
+        console.log(' watching Position: ' + new Date().toISOString());
+      }
 
-      var userPos = new google.maps.LatLng(
+      var _userId = parseInt(userId.value);
+      var _userPos = new google.maps.LatLng(
         position.coords.latitude,
         position.coords.longitude);
 
-      // record position to hidden input
-      userlocale.innerHTML = JSON.stringify(userPos);
-
-      console.log('UserId: ', userId);
-      if(parseInt(userId.innerText) > 0){
-        // update db
-        // retrieve any target info as well
-      }
-
-      // if we have a map div
-      if(mapDiv){
-
-        if(map == undefined) {
-          var myOptions = {
-            zoom: 12,
-            center: userPos,
-            tilt: 45,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          }
-          map = new google.maps.Map(mapDiv, myOptions);
+      //ajax call to record location
+      var _url = window.location.origin + '/locale/user/1';
+      console.log('google watchPosition: ' + new Date().toISOString() + ' @ ' + _userPos);
+      $.ajax({
+        method: 'POST',
+        url: _url,
+        dataType: 'json',
+        data: _userPos.toJSON()
+      })
+      .done(data =>{
+        //console.log('returned data', data, data.lat, data.lng);
+        if(data.lat !== '0' && data.lng !== '0'){
+          var d = new google.maps.LatLng(parseFloat(data.lat), parseFloat(data.lng));
+          //console.log('transformed locale', d);
+          //reset markers
+          markers = [];
+          markers.push(d);
+          drawMap(d);
         }
-        else map.panTo(userPos);
+      });
 
-
-      }
-
-        // TODO how to?
-        // clear out old markers
-        userMarker = null;
-        targetMarker = null;
-
-
-
-        // redraw markers
-        userMarker = new google.maps.Marker({
-          position: userPos,
-          map: map
-        });
-
-        targetMarker = new google.maps.Marker({
-          position: userPos,
-          map: map
-        });
-
-
-
-      },
-      function(err){
-        // log any errors
-        errorDiv.innerHTML = 'getCurrentPositionError: ' + err;
-      },
-      {enableHighAccuracy:true, timeout:60000, maximumAge:0}
-    );//end watchid
+    });// end of watchPosition
   } else {
-    //TODO some sort of error notification
-    errorDiv.innerHTML = 'geolocation is not available!';
+    if(gError){
+      gError.innerHTML = 'no navigator or no navigator.geolocation';
+    } else {
+      console.log('no navigator or no navigator.geolocation');
+    }
   }
-}
+
+});

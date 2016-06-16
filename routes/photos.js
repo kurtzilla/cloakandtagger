@@ -48,11 +48,9 @@ router.post('/', upload.any(), function(req,res,next){
       res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
     },
     {
-      //public_id: 'sample_id',
       crop: 'fit',
       width: 200,
       height: 200
-      // tags: ['special', 'for_homepage']
     }
   );
 });

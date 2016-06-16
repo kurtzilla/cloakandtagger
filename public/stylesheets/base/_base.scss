@@ -4,6 +4,11 @@ body {
   flex-direction: column;
 }
 
+#slide-out {
+  z-index: 2048;
+  opacity: .8;
+}
+
 header {
 
 }
@@ -12,10 +17,6 @@ main {
   flex: 1 0 auto;
 }
 
-
-
-
-
 footer {
   position: fixed;
   bottom: 0;
@@ -23,6 +24,46 @@ footer {
   height: 120px;
 }
 
+
+#videoHeadlineTop {
+  color: white;
+  position: absolute;
+  top: 15%;
+  text-align: center;
+  width: 100%;
+  z-index: 128;
+}
+#videoHeadlineBottom {
+  color: white;
+  position: absolute;
+  top: 70%;
+  text-align: center;
+  width: 100%;
+  z-index: 128;
+}
+
+#gameplayContent{
+  margin-bottom: 120px;
+  overflow: scroll;
+}
+
+.gameDiv {
+  width: 100%;
+  position: relative;
+  // display: flex;
+}
+.gameimage {
+    width: 100%;
+    position: relative;
+}
+
+.gameCityCaption {
+    color: white;
+    position: absolute;
+    top: 30%;
+    text-align: center;
+    width: 100%;
+}
 // #siteSection.container{
 //   /*border:solid red 1px;*/
 //   /*padding: 0;

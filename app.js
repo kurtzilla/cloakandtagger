@@ -17,6 +17,7 @@ var maps = require('./routes/maps');
 var photos = require('./routes/photos');
 var admin = require('./routes/admin');
 var games = require('./routes/games');
+var locale = require('./routes/locale');
 
 var enums = require('./lib/enums');
 
@@ -24,16 +25,6 @@ var enums = require('./lib/enums');
 // establish app
 var app = express();
 
-// tabris app setup
-  // var page = new tabris.Page({
-  //   topLevel: true,
-  //   title: "app"
-  // });
-  // new tabris.TextView({
-  //   layoutData: {centerX: 0, centerY: 0},
-  //   text: "My First App"
-  // }).appendTo(page);
-  // page.open();
 
 app.use(cookieSession(
   {
@@ -74,6 +65,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cookieParser());
+// TODO this looks like auth0/passport stuff
+// Sam can you update what the secret value should be here?
 // See express session docs for information on the options: https://github.com/expressjs/session
 app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
 app.use(passport.initialize());
@@ -85,10 +78,7 @@ app.use('/maps', maps);
 app.use('/photos', photos);
 app.use('/admin', admin);
 app.use('/games', games);
-// app.use('/user', user);
-// app.use('/setup-passport', passport);
-// app.use('/auth', auth);
-
+app.use('/locale', locale);
 
 
 
@@ -117,7 +107,7 @@ app.get('/callback',
           // email = req.session.emails[0].value || '';
 
       console.log(
-        'Session ' + JSON.stringify(req.session)
+        'Session ' + JSON.stringify(req.user)
       )
       console.log(email);
       console.log(
