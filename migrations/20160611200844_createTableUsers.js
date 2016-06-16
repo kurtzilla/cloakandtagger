@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
     table.increments('id').primary();
     table.timestamp('dtcreated').defaultTo(knex.fn.now());
     table.string('roles').notNullable();
-    table.string('email').notNullable().unique();
+    table.string('email').notNullable().unique().defaultTo('');
     table.string('password').notNullable().defaultTo('');
     table.string('firstname').notNullable().defaultTo('');
     table.string('lastname').notNullable().defaultTo('');

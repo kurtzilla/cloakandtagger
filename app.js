@@ -18,7 +18,7 @@ var photos = require('./routes/photos');
 var admin = require('./routes/admin');
 var games = require('./routes/games');
 
-
+var enums = require('./lib/enums');
 
 
 // establish app
@@ -96,38 +96,48 @@ app.use('/games', games);
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
   function(req, res) {
-    console.log('User' + JSON.stringify(req.user.name));
     //TODO:All Signup/login logic
     //TODO:If New - Insert into DB, return user ID, set req.session.id
     //TODO:Else - get user ID - set req.session.id
     if (!req.session.user) {
+      // console.log('User' + req.user);
+      var accessToken = JSON.stringify(req.user.identities[0].access_token) || JSON.stringify(req.session.identities[0].access_token);
+      console.log(
+        'Name = ' + (JSON.stringify(req.user.displayName)),
+        'User id = ' + (JSON.stringify(req.user.identities[0].user_id)),
+        'Access Token = ' + (JSON.stringify(req.user.identities[0].access_token)),
+        'Session '
+      )
+      // req.session.id = req.user.identities[0].user_id;
+      // console.log('Session token ' + req.session.id)
+
+      // console.log(req.session.user);
       // console.log(req.user.Profile);
       // req.session.user = req.user.Profile.id;
-      knex('users')
-      .insert({
-        // email: req.user.email.toLowerCase(),
-        id: JSON.stringify(req.user.id),
-        // password: req.user.password // encrypt the pass for db storage
-        // roles: JSON.stringify([enums.userRole[0]]),
-        // loginprovider: enums.loginProvider[0]
-      })
-      .then(function(id) {
+      // knex('users')
+      // .insert({
+      //   email: req.user.emails[0].value,
+      //   id: JSON.stringify(req.user.user_id),
+      //   password: '', // encrypt the pass for db storage
+      //   roles: JSON.stringify([enums.userRole[0]]),
+      //   loginprovider: enums.loginProvider[0]
+      // })
+      // .then(function(data) {
 
         // log an event - don't bother with return, promise, etc
-        console.log(id)
-        knex('userevents').insert({
-          status: enums.eventStatus[1],
-          userid: parseInt(id),
-          eventverb: 'signup',
-          newvalue: _email.toLowerCase(),
-          description: 'new user signup',
-          ipaddress: req.connection.remoteAddress
-        })
-      })
-      .catch(function(err){
-        console.log(err);
-      })
-      console.log(req.session.user + "test")
+        // console.log(users)
+        // knex('userevents').insert({
+        //   status: enums.eventStatus[1],
+        //   userid: parseInt(id),
+        //   eventverb: 'signup',
+        //   // newvalue: _email.toLowerCase(),
+        //   description: 'new user signup',
+        //   ipaddress: req.connection.remoteAddress
+        // })
+      // })
+      // .catch(function(err){
+      //   console.log(err);
+      // })
     }
     // res.redirect("/user");
     res.send();
