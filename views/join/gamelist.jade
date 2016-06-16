@@ -5,7 +5,7 @@ block content
     each row in rows
       div(class="gameDiv")
         a(href="/join/"+row.id)
-          img(class="gameimage" src='../../images/'+row.title+'.jpg')
+          img(class="gameimage" src=row.imageurl)
           h3(class="gameCityCaption")= row.title
           h6(class="gameDateCaption")= row.dtstart
       
