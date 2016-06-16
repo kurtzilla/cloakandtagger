@@ -172,77 +172,101 @@ router.get('/:id', function(req, res, next){
 router.get('/:gameid/seedgame', function(req,res,next){
   var _gameid = parseInt(req.params.gameid);
 
+  // clear out game events
+  knex('gameevents').del()
+  .where({gameid:_gameid})
+  .then(function(ge){
+    console.log('active players deleted');
 
-  // delete any active players and players from game
-  knex('activeplayers').delete().run();
-  knex('players').delete().run();
-  // delete any existing player data
+    // delete any active players and players from game
+    knex('activeplayers').del()
+    .then(function(ap){
+      console.log('active players deleted');
+
+      knex('players').del()
+      .then(function(pp){
+        console.log('active players deleted');
+        // generate up to ten users
+        knex.select('*')
+        .from('users')
+        .limit(10)
+        .then(function(rows) {
+          // console.log('user list length', rows.length);
+
+          var seedLocations = [
+            {"lat":"40.0179359","lng":"-105.28214609999998"},
+            {"lat":"40.0177793","lng":"-105.28199989999998"},
+            {"lat":"40.0133969","lng":"-105.27723759999998"},
+            {"lat":"40.0126173","lng":"-105.28073389999998"},
+            {"lat":"40.0177793","lng":"-105.28199989999998"},
+            {"lat":"40.0177883","lng":"-105.28199989999998"},
+            {"lat":"40.0179121","lng":"-105.27822999999998"},
+            {"lat":"40.0095857","lng":"-105.28280889999998"},
+            {"lat":"40.0177793","lng":"-105.28100989999998"},
+            {"lat":"39.9973033","lng":"-105.27414869999998"},
+            {"lat":"40.0644673","lng":"-105.28373899999981"}
+          ];
+
+          //shuffle the seedLocations
+          var shuffSeeds = helpers.shuffle(seedLocations);
+          var shuffRows = helpers.shuffle(rows);
 
 
-  // generate up to ten users
-  knex.select('*')
-  .from('users')
-  .limit(10)
-  .then(function(rows) {
-    // console.log('user list length', rows.length);
+          // first create players to insert
+          var ins = [];
+          for(var i=0;i<shuffRows.length;i++){
+            var row = shuffRows[i];
+            ins.push({userid:row.id, gameid: _gameid, lastlocation:shuffSeeds[i]});
+          }
 
-    var seedLocations = [
-      {"lat":"40.0179359","lng":"-105.28214609999998"},
-      {"lat":"40.0177793","lng":"-105.2819998"},
-      {"lat":"40.0133969","lng":"-105.2772375"},
-      {"lat":"40.0126173","lng":"-105.2807338"},
-      {"lat":"40.0177793","lng":"-105.2819998"},
-      {"lat":"40.0177883","lng":"-105.2819998"},
-      {"lat":"40.0179121","lng":"-105.2782299"},
-      {"lat":"40.0095857","lng":"-105.2828088"},
-      {"lat":"40.0177793","lng":"-105.2810098"},
-      {"lat":"39.9973033","lng":"-105.2741486"},
-      {"lat":"40.0644673","lng":"-105.283738"}
-    ];
+          // console.log('here is array of users to insert', ins);
 
-    // first create players to insert
-    var ins = [];
-    for(var i=0;i<rows.length;i++){
-      var row = rows[i];
-      ins.push({userid:row.id, gameid: _gameid, lastlocation:seedLocations[i]});
-    }
+          // insert players
+          //TODO ensure that there are no dupes
+          knex.insert(ins)
+          .into('players')
+          .returning('id')
+          .then(function(ids){
 
-    // console.log('here is array of users to insert', ins);
+            console.log('inserted players ids', ids);
+            // randomize the player list
+            var rando = helpers.shuffle(ids);
+            var acts = [];
+            for(var i=0;i<ids.length;i++){
+              var current = ids[i];
+              //handle the end case
+              var next = (i===(ids.length-1)) ? ids[0] : ids[i+1];
+              acts.push({gameid:_gameid, playerid:current, targetid:next});
+            }
 
-    // insert players
-    //TODO ensure that there are no dupes
-    knex.insert(ins)
-    .into('players')
-    .returning('id')
-    .then(function(ids){
+            knex.insert(acts, 'id')
+            .into('activeplayers')
+            .then(function(actives){
 
-      console.log('inserted players ids', ids);
-      // randomize the player list
-      var rando = helpers.shuffle(ids);
-      var acts = [];
-      for(var i=0;i<ids.length;i++){
-        var current = ids[i];
-        //handle the end case
-        var next = (i===(ids.length-1)) ? ids[0] : ids[i+1];
-        acts.push({gameid:_gameid, playerid:current, targetid:next});
-      }
-
-      knex.insert(acts, 'id')
-      .into('activeplayers')
-      .then(function(actives){
-
-        console.log('inserted activeplayers', actives);
-        res.redirect('/games/' + _gameid);
-      })
-      .catch(function(err){
+              console.log('inserted activeplayers', actives);
+              res.redirect('/games/' + _gameid);
+            })
+            .catch(function(err){
+                next(err);
+            });
+          })
+          .catch(function(err){
+              next(err);
+          });
+        })
+        .catch(function(err) {
           next(err);
+        });
+      })
+      .catch(function(err) {
+        next(err);
       });
     })
     .catch(function(err){
-        next(err);
+      next(err);
     });
   })
-  .catch(function(err) {
+  .catch(function(err){
     next(err);
   });
 });

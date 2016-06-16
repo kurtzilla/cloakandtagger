@@ -10,10 +10,10 @@ block content
           li= msg
     
     p host: #{game.hostuserid} start: #{moment(game.dtstart).format("YY-MM-DD HH:mmA")}  end: #{moment(game.dtend).format("YY-MM-DD HH:mmA")}
-    hr
-    p
-      a(href="/games/#{game.id}/join" class="waves-effect waves-light btn") I want to join this game! 
-      span(style="background-color:#eee;padding:10px;margin-left:15px;") you cannot join if you are already in player roster 
+    //- hr
+    //- p
+    //-   a(href="/games/#{game.id}/join" class="waves-effect waves-light btn") I want to join this game! 
+    //-   span(style="background-color:#eee;padding:10px;margin-left:15px;") you cannot join if you are already in player roster 
     
     p
       a(href="/games/#{game.id}/seedgame" class="waves-effect waves-light btn") Seed a game with up to 10 players
