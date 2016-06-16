@@ -4,7 +4,8 @@ block content
   if rows
     each row in rows
       div(class="gameDiv")
-        a(href="/join/"+row.title)
+        a(href="/join/"+row.id)
           img(class="gameimage" src='../../images/'+row.title+'.jpg')
           h3(class="gameCityCaption")= row.title
+          h6(class="gameDateCaption")= row.dtstart
       

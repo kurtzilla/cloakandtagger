@@ -55,20 +55,24 @@ html
             li
               a(href="/") Rules
             if user
-              li
-                a(href="/maps") maps
-                a(href="/photos") photos
               if user.roles && user.roles.indexOf('admin') !== -1
                 li
                   a(href="/admin") admin
   
     //- DANGER MODAL
-    a(class="waves-effect waves-light btn modal-trigger" href="#modal1") Modal
+    //- a(class="waves-effect waves-light btn modal-trigger" href="#modal1") Modal
 
     div(id="modal1" class="modal")
       div(class="modal-content")
         h4 DANGER!
         p Someone is hunting you and they are very close. Close your Cloak&Tagger app to hide your location and get to safety immediately!
+      div(class="modal-footer")
+        a(href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat") I Understand
+        
+    div(id="eliminated" class="modal")
+      div(class="modal-content")
+        h4 GAME OVER!
+        p You have been tagged and eliminated from the game. Thank you for your valiant efforts. Better luck next time.
       div(class="modal-footer")
         a(href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat") I Understand
     

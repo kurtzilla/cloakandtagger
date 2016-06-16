@@ -9,15 +9,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { siteSection: 'index', title: 'Home page' });
 });
 
-router.get('/join', function(req, res, next) {
-  knex('games').then(function(data){
-    console.log(data);
-    res.render('join/gamelist', {rows: data});
-  })
-})
-router.get('/testgamedetail', function(req, res, next) {
-  res.render('join/gamedetails');
-})
 router.get('/testgameplay', function(req, res, next) {
   res.render('gameplay/gameplay');
 })
@@ -35,4 +26,25 @@ router.get('/tagphoto', function(req, res, next) {
   res.render('photos');
 })
 
+router.get('/join', function(req, res, next) {
+  knex('games').then(function(data){
+    console.log(data);
+    res.render('join/gamelist', {rows: data});
+  })
+})
+
+////////////////  IN PROGRESS  /////////////////////////////////////////
+router.get('/join/:id', function(req, res, next) {
+  knex('games')
+  .where({ id: parseInt(req.params.id)})
+  .first()
+  .then(function(data){
+    res.render('join/gamedetails', { game: data });
+  })
+  .catch(function(err){
+    next(err);
+  });
+  console.log(req.params);
+})
+////////////////////////////////////////////////////////////////////////
 module.exports = router;
