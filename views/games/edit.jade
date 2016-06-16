@@ -14,8 +14,13 @@ block content
     p
       a(href="/games/#{game.id}/join" class="waves-effect waves-light btn") I want to join this game! 
       span(style="background-color:#eee;padding:10px;margin-left:15px;") you cannot join if you are already in player roster 
+    
     p
-      a(href="/games/#{game.id}/addallusers" class="waves-effect waves-light btn") Create game from ten existing players
+      a(href="/games/#{game.id}/seedgame" class="waves-effect waves-light btn") Seed a game with up to 10 players
+    
+    
+    
+    
     
     h6 player listing  
     if players.length > 0
