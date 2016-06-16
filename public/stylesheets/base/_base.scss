@@ -24,6 +24,11 @@ footer {
   height: 120px;
 }
 
+p.user-upload-frame {
+  display: flex;
+  justify-content: center;
+}
+
 #videoHeadlineTop {
   color: white;
   position: absolute;
@@ -63,6 +68,7 @@ footer {
     text-align: center;
     width: 100%;
 }
+
 // #siteSection.container{
 //   /*border:solid red 1px;*/
 //   /*padding: 0;
@@ -144,5 +150,5 @@ footer {
 }
 
 *{
-  align-items: 
+  align-items:
 }
