@@ -117,7 +117,7 @@ app.get('/callback',
           // email = req.session.emails[0].value || '';
 
       console.log(
-        'Session ' + JSON.stringify(req.user)
+        'Session ' + JSON.stringify(req.session)
       )
       console.log(email);
       console.log(
