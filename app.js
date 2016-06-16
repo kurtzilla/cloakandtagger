@@ -6,9 +6,9 @@ var knex = require('./db/knex')
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var strategy = require('./routes/auth');
-var session = require('express-session');
+var strategy = require('./routes/setup-passport.js');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
 // include route files
 var routes = require('./routes/index');
@@ -18,6 +18,8 @@ var photos = require('./routes/photos');
 var admin = require('./routes/admin');
 var games = require('./routes/games');
 var locale = require('./routes/locale');
+
+var enums = require('./lib/enums');
 
 
 // establish app
@@ -62,6 +64,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cookieParser());
+// TODO this looks like auth0/passport stuff
+// Sam can you update what the secret value should be here?
+// See express session docs for information on the options: https://github.com/expressjs/session
+app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', routes);
 app.use('/users', users);
@@ -73,24 +82,85 @@ app.use('/locale', locale);
 
 
 
-// TODO this looks like auth0/passport stuff
-// Sam can you update what the secret value should be here?
-
-// See express session docs for information on the options: https://github.com/expressjs/session
-app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Auth0 callback handler
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
   function(req, res) {
-    if (!req.user) {
-      throw new Error('user null');
+    //TODO:All Signup/login logic
+    //TODO:If New - Insert into DB, return user ID, set req.session.id
+    //TODO:Else - get user ID - set req.session.id
+    if (!req.session.user) {
+      // console.log('User' + req.user);
+      var accessToken =
+      JSON.stringify(req.user.identities[0].access_token) ||      JSON.stringify(req.session.identities[0].access_token),
+
+        id = JSON.stringify(req.user.identities[0].user_id),
+
+        email;
+
+      if(req.user.emails) {
+        email = JSON.stringify(req.user.emails[0].value);
+      } else {
+        email = 'Not available';
+      }
+
+          // email = req.session.emails[0].value || '';
+
+      console.log(
+        'Session ' + JSON.stringify(req.user)
+      )
+      console.log(email);
+      console.log(
+        'Name = ' + JSON.stringify(req.user.displayName),
+        'User id = ' + JSON.stringify(req.user.identities[0].user_id),
+        'Access Token = ' + JSON.stringify(req.user.identities[0].access_token)
+      )
+      knex('users')
+      .insert({
+        email: email,
+        id: id.toString(),
+        firstname: req.user.name.givenName,
+        lastname: req.user.name.familyName,
+        loginToken: accessToken,
+        tokenexpiry: 3600,
+        password: '', // encrypt the pass for db storage
+        roles: JSON.stringify([enums.userRole[0]]),
+        loginprovider: enums.loginProvider[0]
+      })
+
+      // req.session.id = req.user.identities[0].user_id;
+      // console.log('Session token ' + req.session.id)
+
+      // console.log(req.session.user);
+      // console.log(req.user.Profile);
+      // req.session.user = req.user.Profile.id;
+      // .then(function(data) {
+
+        // log an event - don't bother with return, promise, etc
+        // console.log(users)
+        // knex('userevents').insert({
+        //   status: enums.eventStatus[1],
+        //   userid: parseInt(id),
+        //   eventverb: 'signup',
+        //   // newvalue: _email.toLowerCase(),
+        //   description: 'new user signup',
+        //   ipaddress: req.connection.remoteAddress
+        // })
+      // })
+      // .catch(function(err){
+      //   console.log(err);
+      // })
     }
-    res.redirect("/user");
+    // res.redirect("/user");
+    res.send();
   });
+
+app.get('/user', function (req, res) {
+  // console.log(req.user);
+  res.render('users/user', {
+    user: req.user
+  });
+});
 
 
 // catch 404 and forward to error handler
