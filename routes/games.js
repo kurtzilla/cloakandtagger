@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../db/knex');
 var enums = require('../lib/enums');
+var helpers = require('../lib/helpers');
 var multer  = require('multer');
 var upload = multer({ dest: 'upfiles/' });
 var del = require('del');
@@ -167,6 +168,63 @@ router.get('/:id', function(req, res, next){
   });
 });
 
+// will add up to ten players
+router.get('/:gameid/addallusers', function(req,res,next){
+  var _gameid = parseInt(req.params.gameid);
+
+  // gereate up to ten users
+  knex.select('*')
+  .from('users')
+  .limit(10)
+  .then(function(rows) {
+    // console.log('user list length', rows.length);
+
+    // first create players to insert
+    var ins = [];
+    for(var i=0;i<rows.length;i++){
+      var row = rows[i];
+      ins.push({userid:row.id, gameid: _gameid});
+    }
+
+    // console.log('here is array of users to insert', ins);
+
+    // insert players
+    //TODO ensure that there are no dupes
+    knex.insert(ins)
+    .into('players')
+    .returning('id')
+    .then(function(ids){
+
+      console.log('inserted players ids', ids);
+      // randomize the player list
+      var rando = helpers.shuffle(ids);
+      var acts = [];
+      for(var i=0;i<ids.length;i++){
+        var current = ids[i];
+        //handle the end case
+        var next = (i===(ids.length-1)) ? ids[0] : ids[i+1];
+        acts.push({gameid:_gameid, playerid:current, targetid:next});
+      }
+
+      knex.insert(acts, 'id')
+      .into('activeplayers')
+      .then(function(actives){
+
+        console.log('inserted activeplayers', actives);
+        res.redirect('/games/' + _gameid);
+      })
+      .catch(function(err){
+          next(err);
+      });
+    })
+    .catch(function(err){
+        next(err);
+    });
+  })
+  .catch(function(err) {
+    next(err);
+  });
+});
 
 // session user joins the game
 router.get('/:gameid/join', function(req,res,next){

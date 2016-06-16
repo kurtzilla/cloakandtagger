@@ -11,19 +11,23 @@ block content
     
     p host: #{game.hostuserid} start: #{moment(game.dtstart).format("YY-MM-DD HH:mmA")}  end: #{moment(game.dtend).format("YY-MM-DD HH:mmA")}
     hr
-    a(href="/games/#{game.id}/join/" class="waves-effect waves-light btn") Join Game
+    p
+      a(href="/games/#{game.id}/join" class="waves-effect waves-light btn") I want to join this game! 
+      span(style="background-color:#eee;padding:10px;margin-left:15px;") you cannot join if you are already in player roster 
+    p
+      a(href="/games/#{game.id}/addallusers" class="waves-effect waves-light btn") Create game from ten existing players
     
     h6 player listing  
     if players.length > 0
       ul
         each ent in players
-          li= ent.userid
+          li id: #{ent.id} user: #{ent.userid} loc: #{ent.lastlocation}
     
     h6 active players
     if actives.length > 0
       ul
         each ent in actives
-          li= ent.playerid
+          li id: #{ent.id} player: #{ent.playerid} target: #{ent.targetid}
     
     h6 game events
     table(class="bordered striped")
