@@ -17,21 +17,12 @@ var maps = require('./routes/maps');
 var photos = require('./routes/photos');
 var admin = require('./routes/admin');
 var games = require('./routes/games');
+var locale = require('./routes/locale');
 
 
 // establish app
 var app = express();
 
-// tabris app setup
-  // var page = new tabris.Page({
-  //   topLevel: true,
-  //   title: "app"
-  // });
-  // new tabris.TextView({
-  //   layoutData: {centerX: 0, centerY: 0},
-  //   text: "My First App"
-  // }).appendTo(page);
-  // page.open();
 
 app.use(cookieSession(
   {
@@ -78,9 +69,13 @@ app.use('/maps', maps);
 app.use('/photos', photos);
 app.use('/admin', admin);
 app.use('/games', games);
+app.use('/locale', locale);
 
 
-app.use(cookieParser());
+
+// TODO this looks like auth0/passport stuff
+// Sam can you update what the secret value should be here?
+
 // See express session docs for information on the options: https://github.com/expressjs/session
 app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
 
