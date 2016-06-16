@@ -220,7 +220,6 @@ app.get('/callback',
             console.log('Email existed - Signed In')
             req.session.secret = accessToken;
             req.session.user = data;
-            console.log(data);
           }
         })
       }

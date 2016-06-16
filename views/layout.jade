@@ -4,7 +4,9 @@ html
     title= title
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css")
     link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+    link(href='https://fonts.googleapis.com/css?family=Playfair+Display+SC' rel='stylesheet' type='text/css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/materialize.css')
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     
   body
@@ -27,8 +29,8 @@ html
       //- h2 Cloak and Tagger 
       div(class="navbar-fixed")
         nav 
-          a(href="/" class="left brand-logo") Logo
-          a(href="#" data-activates="slide-out" class="right button-collapse")
+          a(href="/" class="left brand-logo cloakandtagger" id="logo") Cloak & Tagger
+          a(href="#" data-activates="slide-out" class="right button-collapse show-on-large")
             i(class="left material-icons") menu
           ul(id="slide-out" class="side-nav right")
             div(id='menu-list')
