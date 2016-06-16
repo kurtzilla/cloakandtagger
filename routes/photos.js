@@ -49,8 +49,8 @@ router.post('/', upload.any(), function(req,res,next){
     },
     {
       crop: 'fit',
-      width: 600,
-      height: 600
+      width: 800,
+      height: 800
     }
   );
 });
