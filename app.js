@@ -68,7 +68,7 @@ app.use(cookieParser());
 // TODO this looks like auth0/passport stuff
 // Sam can you update what the secret value should be here?
 // See express session docs for information on the options: https://github.com/expressjs/session
-app.use(session({ secret: 'YOUR_SECRET_HERE', resave: false,  saveUninitialized: false }));
+app.use(session({ secret: 'YOUR_SECRET_HERE', resave: true,  saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -89,14 +89,27 @@ app.get('/callback',
     //TODO:All Signup/login logic
     //TODO:If New - Insert into DB, return user ID, set req.session.id
     //TODO:Else - get user ID - set req.session.id
+    // app.use(session({ secret: 'YOUR_SECRET_HERE', resave: true,  saveUninitialized: false }));
+    console.log('1 = ' + req.session.user);
+    // req.session.destroy;
+    // console.log('2 = '+req.session.user);
+
     if (!req.session.user) {
       // console.log('User' + req.user);
+      req.session.user = req.user;
+      console.log(req.session.user);
       var accessToken =
-      JSON.stringify(req.user.identities[0].access_token) ||      JSON.stringify(req.session.identities[0].access_token),
+      JSON.stringify(req.user.identities[0].access_token) || JSON.stringify(req.session.identities[0].access_token),
 
         id = JSON.stringify(req.user.identities[0].user_id),
 
-        email;
+        email,
+        name;
+
+
+      req.session.secret = accessToken;
+
+      console.log('session = ' + req.session.secret)
 
       if(req.user.emails) {
         email = JSON.stringify(req.user.emails[0].value);
@@ -104,12 +117,8 @@ app.get('/callback',
         email = 'Not available';
       }
 
-          // email = req.session.emails[0].value || '';
 
-      console.log(
-        'Session ' + JSON.stringify(req.user)
-      )
-      console.log(email);
+      console.log('Email = ' + email);
       console.log(
         'Name = ' + JSON.stringify(req.user.displayName),
         'User id = ' + JSON.stringify(req.user.identities[0].user_id),
@@ -121,11 +130,14 @@ app.get('/callback',
         id: id.toString(),
         firstname: req.user.name.givenName,
         lastname: req.user.name.familyName,
-        loginToken: accessToken,
+        logintoken: '', //input issue, causes error
         tokenexpiry: 3600,
         password: '', // encrypt the pass for db storage
         roles: JSON.stringify([enums.userRole[0]]),
-        loginprovider: enums.loginProvider[0]
+        loginprovider: req.user.provider
+      })
+      .catch(function(err){
+        console.log(err);
       })
 
       // req.session.id = req.user.identities[0].user_id;
@@ -150,6 +162,8 @@ app.get('/callback',
       // .catch(function(err){
       //   console.log(err);
       // })
+    } else {
+      console.log('existed');
     }
     // res.redirect("/user");
     res.send();
