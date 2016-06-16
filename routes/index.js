@@ -9,13 +9,14 @@ router.get('/', function(req, res, next) {
   res.render('index', { siteSection: 'index', title: 'Home page' });
 });
 
-module.exports = router;
-
-router.get('/testgamelist', function(req, res, next) {
-  res.render('join/gamelist');
+router.get('/join', function(req, res, next) {
+  knex('games').then(function(data){
+    console.log(data);
+    res.render('join/gamelist', {rows: data});
+  })
 })
 router.get('/testgamedetail', function(req, res, next) {
-  res.render('join/gamedetail');
+  res.render('join/gamedetails');
 })
 router.get('/testgameplay', function(req, res, next) {
   res.render('gameplay/gameplay');
@@ -30,3 +31,8 @@ router.get('/testgameplaydossier', function(req, res, next) {
 router.get('/testgameplaygame', function(req, res, next) {
   res.render('gameplay/includes/game');
 })
+router.get('/tagphoto', function(req, res, next) {
+  res.render('photos');
+})
+
+module.exports = router;
