@@ -50,10 +50,19 @@ function drawMap(centerPos){
 $(function(){
 
   if (navigator && navigator.geolocation) {
-    gError.innerHTML = 'navigator.geolocation is available';
+    if(gError){
+      gError.innerHTML = 'navigator.geolocation is available';
+    } else {
+      console.log('navigator.geolocation is available');
+    }
+
 
     var watchId = navigator.geolocation.watchPosition(function(position) {
-      gError.innerHTML += ' watching Position: ' + new Date().toISOString();
+      if(gError){
+        gError.innerHTML = ' watching Position: ' + new Date().toISOString();
+      } else {
+        console.log(' watching Position: ' + new Date().toISOString());
+      }
 
       var _userId = parseInt(userId.value);
       var _userPos = new google.maps.LatLng(
@@ -83,7 +92,11 @@ $(function(){
 
     });// end of watchPosition
   } else {
-    gError.innerHTML = 'no navigator or no navigator.geolocation';
+    if(gError){
+      gError.innerHTML = 'no navigator or no navigator.geolocation';
+    } else {
+      console.log('no navigator or no navigator.geolocation');
+    }
   }
 
 });
