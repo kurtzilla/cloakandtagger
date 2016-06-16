@@ -101,27 +101,49 @@ app.get('/callback',
     //TODO:Else - get user ID - set req.session.id
     if (!req.session.user) {
       // console.log('User' + req.user);
-      var accessToken = JSON.stringify(req.user.identities[0].access_token) || JSON.stringify(req.session.identities[0].access_token);
+      var accessToken =
+      JSON.stringify(req.user.identities[0].access_token) ||      JSON.stringify(req.session.identities[0].access_token),
+
+        id = JSON.stringify(req.user.identities[0].user_id),
+
+        email;
+
+      if(req.user.emails) {
+        email = JSON.stringify(req.user.emails[0].value);
+      } else {
+        email = 'Not available';
+      }
+
+          // email = req.session.emails[0].value || '';
+
       console.log(
-        'Name = ' + (JSON.stringify(req.user.displayName)),
-        'User id = ' + (JSON.stringify(req.user.identities[0].user_id)),
-        'Access Token = ' + (JSON.stringify(req.user.identities[0].access_token)),
-        'Session '
+        'Session ' + JSON.stringify(req.user)
       )
+      console.log(email);
+      console.log(
+        'Name = ' + JSON.stringify(req.user.displayName),
+        'User id = ' + JSON.stringify(req.user.identities[0].user_id),
+        'Access Token = ' + JSON.stringify(req.user.identities[0].access_token)
+      )
+      knex('users')
+      .insert({
+        email: email,
+        id: id.toString(),
+        firstname: req.user.name.givenName,
+        lastname: req.user.name.familyName,
+        loginToken: accessToken,
+        tokenexpiry: 3600,
+        password: '', // encrypt the pass for db storage
+        roles: JSON.stringify([enums.userRole[0]]),
+        loginprovider: enums.loginProvider[0]
+      })
+
       // req.session.id = req.user.identities[0].user_id;
       // console.log('Session token ' + req.session.id)
 
       // console.log(req.session.user);
       // console.log(req.user.Profile);
       // req.session.user = req.user.Profile.id;
-      // knex('users')
-      // .insert({
-      //   email: req.user.emails[0].value,
-      //   id: JSON.stringify(req.user.user_id),
-      //   password: '', // encrypt the pass for db storage
-      //   roles: JSON.stringify([enums.userRole[0]]),
-      //   loginprovider: enums.loginProvider[0]
-      // })
       // .then(function(data) {
 
         // log an event - don't bother with return, promise, etc
