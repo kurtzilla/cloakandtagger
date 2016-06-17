@@ -119,7 +119,7 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
                                   console.log(data.error);
                                 }
                                 else if(data.isIdentical === true) {
-                                  res.render('tagconfirmed');
+                                  res.render('tagconfirmed', { latestPhoto: result.url, targetCrossed: "http://www.clker.com/cliparts/X/Z/1/Z/v/7/cross.svg"  });
                                   // require("jsdom").env("", function(err, window) {
                                   //  if (err) {
                                   //    console.error(err);
@@ -134,7 +134,7 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
                                  console.log('faces match');
                                 }
                                 else if(data.isIdentical === false) {
-                                  res.render('tagdenied');
+                                  res.render('tagdenied', { latestPhoto: 'https://pbs.twimg.com/profile_images/378800000563115809/b5bfa0c4b2e8670d09222c17856abef4.jpeg'});
                                   // require("jsdom").env("", function(err, window) {
                                   //  if (err) {
                                   //    console.error(err);
@@ -157,7 +157,7 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
 
                         } else {
                           console.log('no target profie image');
-
+                          console.log(result.url);
                           //TODO send an error message that target has no profile image
                           res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
                         }

@@ -15,6 +15,15 @@ img#tag-upload {
   width: auto;
 }
 
+img#targetCrossed {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  right: 50px;
+  top: 180px;
+  opacity: 0.65
+}
+
 #targetContainer{
   display: flex;
   justify-content: center;
