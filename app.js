@@ -87,6 +87,7 @@ app.use('/locale', locale);
 
 
 // Auth0 callback handler
+// TODO when logging in with Auth0 email (not social) no token provided find a substitute
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
   function(req, res, next) {
