@@ -9,6 +9,7 @@ var upload = multer({ dest: 'upfiles/' });
 var del = require('del');
 var cloudinary = require('cloudinary');
 var request = require("request");
+var photoapi = require("../modules/photoapi.js");
 
 
 cloudinary.config({
@@ -287,15 +288,41 @@ router.post('/:id', upload.any(), function(req,res,next){
             })
             .then(function(data){
 
-              del([_tempDestination]);
+              //TODO: add API call
+              photoapi.faceDetectAPI(result.url)
+                .then(function(data) {
+                  console.log(data);
+                  var userFaceId = data[0].faceId;
+                  console.log(userFaceId);
+                    if(valImage(data) === "no face") {
+                      // does not upload, send error message to user
+                      console.log('error');
+                    }
+                    else if(valImage(data) === "mult faces") {
+                      // does not upload, send error message to user
+                      console.log('error');
+                    }
+                    else if(valImage(data) === "1 face") {
+                      // success - update column in database with object
+                      console.log('success');
+                      knex('users')
+                      .where({id: parseInt(req.session.user.id)})
+                      .update({faceinfo: userFaceId})
+                      .then(function(data) {
+                        del([_tempDestination]);
 
-              res.redirect('/users/' + req.params.id);
-            })
-            .catch(function(err){
-              next(err);
-            });
-          },
-          {
+                        res.redirect('/users/' + req.params.id);
+                      })
+                    }
+                  }).catch(function(err){
+                    next(err);
+                  });
+                }).catch(function(err){
+                  next(err);
+                });
+
+              },
+            {
             crop: 'fit',
             width: 200,
             height: 200
