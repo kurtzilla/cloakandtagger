@@ -6,5 +6,6 @@ block content
     li Game Location: #{game.title}
     li Start Date: #{game.dtstart}
     li Number of players: {}
-      
-  a(class="waves-effect waves-light btn") Join
+  
+  if user    
+    a(class="waves-effect waves-light btn") Join

@@ -9,7 +9,9 @@ var multer  = require('multer');
 var upload = multer({ dest: 'upfiles/' });
 var del = require('del');
 var cloudinary = require('cloudinary');
-var request = require("request");
+var request = require('request');
+var photoapi = require("../modules/photoapi.js");
+
 
 
 cloudinary.config({
@@ -256,11 +258,11 @@ router.post('/:id', upload.any(), function(req,res,next){
 
       // if a new image was specified....we have already determined that one or the other exists
       if(_tempDestination.length > 0){
-        //update image first
+        // update image first
         cloudinary.uploader.upload(
           _tempDestination,
           function(result) {
-          // faceDetectInput = result.url;
+
             knex('users')
             .where({id: parseInt(req.params.id)})
             .update({
@@ -269,19 +271,44 @@ router.post('/:id', upload.any(), function(req,res,next){
               alias: _alias,
               bio: _bio,
               imageurl: result.url
-              // faceinfo:
             })
             .then(function(data){
 
-              del([_tempDestination]);
+              //TODO: add API call
+              photoapi.faceDetectAPI(result.url)
+                .then(function(data) {
+                  // console.log(data);
+                  var userFaceId = data[0].faceId;
+                  console.log(userFaceId);
+                    if(photoapi.valImage(data) === "no face") {
+                      // does not upload, send error message to user
+                      console.log('error');
+                    }
+                    else if(photoapi.valImage(data) === "mult faces") {
+                      // does not upload, send error message to user
+                      console.log('error');
+                    }
+                    else if(photoapi.valImage(data) === "1 face") {
+                      // success - update column in database with object
+                      console.log('success');
+                      knex('users')
+                      .where({id: parseInt(req.session.user.id)})
+                      .update({faceinfo: userFaceId})
+                      .then(function(data) {
+                        del([_tempDestination]);
 
-              res.redirect('/users/' + req.params.id);
-            })
-            .catch(function(err){
-              next(err);
-            });
-          },
-          {
+                        res.redirect('/users/' + req.params.id);
+                      })
+                    }
+                  }).catch(function(err){
+                    next(err);
+                  });
+                }).catch(function(err){
+                  next(err);
+                });
+
+              },
+            {
             crop: 'fit',
             width: 800,
             height: 800
