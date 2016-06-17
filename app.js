@@ -129,6 +129,7 @@ app.get('/callback',
         .insert({
           roles: JSON.stringify([enums.userRole[0]]),
           email: _email,
+          password:'',
           alias: _email,
           loginprovider: _provider,
           logintoken: _token
