@@ -9,6 +9,8 @@ var passport = require('passport');
 var strategy = require('./routes/setup-passport.js');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var Auth0Strategy = require('passport-auth0');
+
 
 // include route files
 var routes = require('./routes/index');
@@ -65,12 +67,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cookieParser());
+
 // TODO this looks like auth0/passport stuff
 // Sam can you update what the secret value should be here?
 // See express session docs for information on the options: https://github.com/expressjs/session
-app.use(session({ secret: 'YOUR_SECRET_HERE', resave: true,  saveUninitialized: false }));
+app.use(session({ secret: 'YOUR_SECRET_HERE',
+  resave: true,  saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 app.use('/', routes);
 app.use('/users', users);
@@ -81,145 +86,81 @@ app.use('/games', games);
 app.use('/locale', locale);
 
 
-
 // Auth0 callback handler
-/*
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
-  function(req, res) {
-    //TODO:All Signup/login logic
-    //TODO:If New - Insert into DB, return user ID, set req.session.id
-    //TODO:Else - get user ID - set req.session.id
-    console.log('1 = ' + req.session.secret);
+  function(req, res, next) {
 
-    if (!req.session.secret) {
-      console.log('Didnt find existing session token');
-      var accessToken =
-        JSON.stringify(req.user.identities[0].user_id) || JSON.stringify(req.session.identities[0].user_id),
-        email,
-        name;
+    console.log('Return from auth0', req.user);
 
-      req.session.secret = accessToken;
-      console.log('session token = ' + req.session.secret);
+    var _provider = req.user.provider;
+    var _displayName = req.user.displayName;
+    var _token = req.user.identities[0].access_token;
+    var _email = req.user.emails[0].value;
 
-      // assign an email
-      if(req.user.emails) {
-        console.log('Email is available')
-        email = JSON.stringify(req.user.emails[0].value);
+
+    console.log('values', _provider, _email);
+
+    knex('users')
+    .where({email:_email})
+    .first()
+    .then(function(existing){
+      if(existing){
+        knex('users')
+        .where({email:_email})
+        .update({
+          loginprovider: _provider,
+          logintoken: _token
+        })
+        .then(function(id){
+
+          //console.log('Updated data', id);
+
+          existing.loginprovider = _provider;
+          existing.logintoken = _token;
+          req.session.user = existing;
+          res.redirect('/join');
+        })
+        .catch(function(err){
+          next(err);
+        });
       } else {
-        console.log('Email is not available - creating email')
-        email = (JSON.stringify(req.user.name.familyName + req.user.name.givenName) + '@tag.com');
-      }
-      console.log('Email = ' + email);
+        knex('users')
+        .insert({
+          roles: JSON.stringify([enums.userRole[0]]),
+          email: _email,
+          alias: _email,
+          loginprovider: _provider,
+          logintoken: _token
+        })
+        .returning('id')
+        .then(function(id){
+          knex('users')
+          .where({id:parseInt(Array.isArray(id) ? id[0] : id)})
+          .first()
+          .then(function(user){
 
-
-      knex('users')
-      .where('email', email)
-      .first()
-      .then(function(data){
-        console.log(data);
-        if (!data) {
-
-          console.log('Email didnt match - creating user')
-
-
-          knex('user')
-          .insert({
-            email: email,
-            firstname: req.user.name.givenName,
-            lastname: req.user.name.familyName,
-            logintoken: accessToken,
-            password: '', // encrypt the pass for db storage
-            roles: JSON.stringify([enums.userRole[0]]),
-            loginprovider: req.user.provider
+            console.log('New user added', user.email);
+            req.session.user = user;
+            res.redirect('/join');
           })
           .catch(function(err){
-            console.log(err);
-          })
-        } else {
-          //Login user
-          console.log('Email existed, account verified - Signing In')
-          req.session.user = data
-        }
-        // console.log(req.session.user);
-      })
-      .catch(function(e){
-        console.log(e);
-      })
-    } else {
-      if(req.session.secret === req.user.identities[0].user_id) {
-        console.log('Session found - same token');
-        knex('users')
-        .where('email', email)
-        .first()
-        .then(function(data){
-          console.log(data);
+            next(err);
+          });
         })
-        return;
-      } else {
-        console.log('Session found - different token');
-        var accessToken =
-        JSON.stringify(req.user.identities[0].user_id) || JSON.stringify(req.session.identities[0].user_id),
-
-        email,
-        name;
-
-        req.session.secret = accessToken;
-        console.log('session token = ' + req.session.secret);
+        .catch(function(err){
+          next(err);
+        });
+      }
+    })
+    .catch(function(err){
+      next(err);
+    });
 
 
-          if(req.user.emails) {
-            console.log('Email is available')
-            email = JSON.stringify(req.user.emails[0].value);
-          } else {
-            console.log('Email is not available')
-            email = (JSON.stringify(req.user.name.familyName + req.user.name.givenName) + '@tag.com');
-          }
 
-          console.log('Email = ' + email);
-
-        knex('users')
-        .where('email', email)
-        .first()
-        .then(function(data){
-          console.log(data);
-          if (!data) {
-            console.log('Email didnt match - creating user')
-            //TODO:Create User
-            req.session.secret = accessToken;
-            knex('user')
-            .insert({
-              email: email,
-              firstname: req.user.name.givenName,
-              lastname: req.user.name.familyName,
-              logintoken: accessToken,
-              password: '', // encrypt the pass for db storage
-              roles: JSON.stringify([enums.userRole[0]]),
-              loginprovider: req.user.provider
-            })
-            .catch(function(err){
-              console.log(err);
-            })
-          } else {
-            //Login user
-            console.log('Email existed - Signed In')
-            req.session.secret = accessToken;
-            req.session.user = data;
-          }
-        })
-      }  // createUser(req,res);
-    }
-  res.send();
 });
-*/
 
-
-app.get('/user', function (req, res) {
-  // console.log(req.user);
-  res.render('users/user', {
-    user: req.user
-  });
-});
 
 
 // catch 404 and forward to error handler
@@ -228,6 +169,7 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
 
 // error handlers
 
