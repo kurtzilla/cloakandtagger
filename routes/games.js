@@ -120,8 +120,8 @@ router.post('/new', upload.any(), function(req, res, next) {
       },
       {
         crop: 'fit',
-        width: 200,
-        height: 200
+        width: 1500,
+        height: 900
       }
     );
   }
