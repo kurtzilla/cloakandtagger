@@ -292,7 +292,7 @@ router.post('/:id', upload.any(), function(req,res,next){
                       // success - update column in database with object
                       console.log('success');
                       knex('users')
-                      .where({id: parseInt(req.session.user.id)})
+                      .where({id: parseInt(req.params.id)})
                       .update({faceinfo: userFaceId})
                       .then(function(data) {
                         del([_tempDestination]);
