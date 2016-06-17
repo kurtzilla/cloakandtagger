@@ -22,9 +22,9 @@ router.get('/testgameplaydossier', function(req, res, next) {
 router.get('/testgameplaygame', function(req, res, next) {
   res.render('gameplay/includes/game');
 })
-router.get('/tagphoto', function(req, res, next) {
-  res.render('photos');
-})
+// router.get('/tagphoto', function(req, res, next) {
+//   res.render('photos');
+// })
 
 router.get('/join', function(req, res, next) {
   knex('games').then(function(data){

@@ -26,7 +26,7 @@ function faceDetectAPI(imageurl) {
       resolve(body);
     })
   })
-}
+};
 
 function faceVerifyAPI(id1, id2) {
 
@@ -49,7 +49,7 @@ function faceVerifyAPI(id1, id2) {
     resolve(body);
     })
   })
-}
+};
 
 function valImage(data) {
   var imgStatus = "";
@@ -63,37 +63,43 @@ function valImage(data) {
     imgStatus = "1 face"
   }
   return imgStatus
-}
+};
 
-faceDetectAPI(faceDetectInput1)
- .then(function(data) {
-   console.log(data);
-   var userFaceId = data[0].faceId;
-   console.log(userFaceId);
-     if(valImage(data) === "no face") {
-       // does not upload, send error message to user
-       console.log('error');
-     }
-     else if(valImage(data) === "mult faces") {
-       // does not upload, send error message to user
-       console.log('error');
-     }
-     else if(valImage(data) === "1 face") {
-       // success - update column in database with object
-       console.log('success');
-       knex('users')
-      //  .where({id: parseInt(req.session.user.id)})
-       .where({id: 4})
-       .update({faceinfo: userFaceId})
-       .finally(function() {
-       knex.destroy();
-     })
-    }
-  }).catch(function(err){
-    next(err);
-});
+// faceDetectAPI(faceDetectInput1)
+//  .then(function(data) {
+//    console.log(data);
+//    var userFaceId = data[0].faceId;
+//    console.log(userFaceId);
+//      if(valImage(data) === "no face") {
+//        // does not upload, send error message to user
+//        console.log('error');
+//      }
+//      else if(valImage(data) === "mult faces") {
+//        // does not upload, send error message to user
+//        console.log('error');
+//      }
+//      else if(valImage(data) === "1 face") {
+//        // success - update column in database with object
+//        console.log('success');
+//        knex('users')
+//       //  .where({id: parseInt(req.session.user.id)})
+//        .where({id: 4})
+//        .update({faceinfo: userFaceId})
+//        .then(function(data){
+//          console.log(data);
+//        })
+//        .catch(function(err){
+//          next(err);
+//        });
+//       //  .finally(function() {
+//       //    knex.destroy();
+//       //  })
+//     }
+//   }).catch(function(err){
+//     next(err);
+// });
 
-// // on upload of 'target player' image (input of faceDetectAPI is uploaded img)
+// on upload of 'target player' image (input of faceDetectAPI is uploaded img)
 // faceDetectAPI(faceDetectInput1)
 // .then(function(data) {
 //   var targetFaceId = "";
@@ -152,6 +158,5 @@ faceDetectAPI(faceDetectInput1)
 module.exports = {
   faceDetectAPI,
   faceVerifyAPI,
-  valImage,
-  faceDetectInput1
+  valImage
 }

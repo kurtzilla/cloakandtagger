@@ -19,6 +19,19 @@ router.post('/user/:id', function(req, res, next) {
 
   // TODO specify that the game must be active
   // this query returns one row - latest game only
+
+  knex('users').select('*').then(function(data){
+  })
+  .catch(function(err){
+    next(err);
+  });
+
+
+  // .finally(function(som){
+  //   knex.destroy();
+  // });
+
+  /*
   knex('players')
   .where({userid:_userid})
   .orderBy('id', 'desc')
@@ -117,6 +130,8 @@ router.post('/user/:id', function(req, res, next) {
   .catch(function(err){
     next(err);
   });
+
+  */
 });
 
 
