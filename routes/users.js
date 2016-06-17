@@ -19,7 +19,6 @@ cloudinary.config({
 });
 
 
-
 router.use(function(req,res,next){
   // console.log('users router');
   next();
@@ -27,25 +26,15 @@ router.use(function(req,res,next){
 
 // return a list of users
 router.get('/', function(req, res, next){
-  query.usersAll('email')
+  query
+  .usersAll('email')
   .then(function(rows){
     res.render('users/userlisting', { siteSection: 'users', title: 'User List', rows: rows });
   })
   .catch(function(err){
     next(err);
   });
-
-
-  // knex('users')
-  // .orderBy('email')
-  // .then(function(data){
-  //   res.render('users/userlisting', { siteSection: 'users', title: 'User List', rows: data });
-  // })
-  // .catch(function(err){
-  //   next(err);
-  // });
 });
-
 
 
 // facilitate signup
@@ -74,7 +63,7 @@ router.post('/signup', function(req, res, next) {
   // TODO _pwd should be at least so many chars and so complex (arbitrary)
   if(_pwd.length <5){
     // TODO define pwd reqs
-    _errors.push('Password must be at least XXX chars');
+    _errors.push('Password must be at least 5 chars');
   }
 
   // return on error
@@ -83,60 +72,47 @@ router.post('/signup', function(req, res, next) {
     res.render('users/signup', { siteSection: 'users', title: 'Signup', error: _errors });
   } else {
 
-    // ensure username is unique
-    knex('users').where({ email: _email.toLowerCase() })
-    .then(function(data) {
+    var queryObject = {};
 
-      // if there is return data - there was a matching row
-      if (data.length) {
-        // TODO clear out input
+    query
+    .userByEmail(_email.toLowerCase())
+    .then(function(data){
+      // console.log('does user exist?', data);
+      if(data){
         res.render('users/signup', { siteSection: 'users', title: 'Signup', error: ['Username is taken'] });
       } else {
-
-        knex('users')
-        .insert({
-          email: _email.toLowerCase(),
-          password: bcrypt.hashSync(_pwd, 8), // encrypt the pass for db storage
-          roles: JSON.stringify([enums.userRole[0]]),
-          loginprovider: enums.loginProvider[0]
-        })
-        .returning('id')
-        .then(function(id) {
-
-          // log an event - don't bother with return, promise, etc
-          knex('userevents').insert({
-            status: enums.eventStatus[1],
-            userid: parseInt(id),
-            eventverb: 'signup',
-            newvalue: _email.toLowerCase(),
-            description: 'new user signup',
-            ipaddress: req.connection.remoteAddress
+        return knex('users')
+          .insert({
+            email: _email.toLowerCase(),
+            password: bcrypt.hashSync(_pwd, 8), // encrypt the pass for db storage
+            roles: JSON.stringify([enums.userRole[0]]),
+            loginprovider: enums.loginProvider[0]
           })
-          .then(function(eventrow){
-
-            knex('users').where({ id: parseInt(id) })
-            .first()
-            .then(function(data) {
-              // get rid of pwd in session object
-              data.password = null;
-              req.session.user = data;
-              res.redirect('/users/' + data.id);
-            })
-            .catch(function(err) {
-              next(err);
-            });
-          })
-          .catch(function(err){
-            next(err);
-          })
-        })
-        .catch(function(err) {
-          next(err);
-        });
+          .returning('id');
       }
     })
-    .catch(function(err) {
-      // error on uniqe username db call
+    .then(function(id){
+      return knex('userevents')
+        .insert({
+          status: enums.eventStatus[1],
+          userid: queryObject.newUserId = parseInt(Array.isArray(id) ? id[0] : id),
+          eventverb: 'signup',
+          newvalue: _email.toLowerCase(),
+          description: 'new user signup',
+          ipaddress: req.connection.remoteAddress
+        })
+        .returning('id');
+    })
+    .then(function(id){
+      return query.userById(queryObject.newUserId);
+    })
+    .then(function(data) {
+      // get rid of pwd in session object
+      data.password = null;
+      req.session.user = data;
+      res.redirect('/users/' + data.id);
+    })
+    .catch(function(err){
       next(err);
     });
   }
