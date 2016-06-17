@@ -305,6 +305,8 @@ router.post('/:id', upload.any(), function(req,res,next){
                           res.redirect('/users/' + req.params.id);
                         })
                       }
+
+
                     }
 
                   }).catch(function(err){
