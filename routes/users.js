@@ -278,28 +278,35 @@ router.post('/:id', upload.any(), function(req,res,next){
               photoapi.faceDetectAPI(result.url)
                 .then(function(data) {
                   // console.log(data);
-                  var userFaceId = data[0].faceId;
-                  console.log(userFaceId);
-                    if(photoapi.valImage(data) === "no face") {
-                      // does not upload, send error message to user
-                      console.log('error');
-                    }
-                    else if(photoapi.valImage(data) === "mult faces") {
-                      // does not upload, send error message to user
-                      console.log('error');
-                    }
-                    else if(photoapi.valImage(data) === "1 face") {
-                      // success - update column in database with object
-                      console.log('success');
-                      knex('users')
-                      .where({id: parseInt(req.params.id)})
-                      .update({faceinfo: userFaceId})
-                      .then(function(data) {
-                        del([_tempDestination]);
+                  if(!data || !data[0]){
 
-                        res.redirect('/users/' + req.params.id);
-                      })
+                    //TODO: fix this !!!
+                    res.redirect('/users/' + req.params.id);
+                  } else {
+                    var userFaceId = data[0].faceId;
+                    console.log(userFaceId);
+                      if(photoapi.valImage(data) === "no face") {
+                        // does not upload, send error message to user
+                        console.log('error');
+                      }
+                      else if(photoapi.valImage(data) === "mult faces") {
+                        // does not upload, send error message to user
+                        console.log('error');
+                      }
+                      else if(photoapi.valImage(data) === "1 face") {
+                        // success - update column in database with object
+                        console.log('success');
+                        knex('users')
+                        .where({id: parseInt(req.params.id)})
+                        .update({faceinfo: userFaceId})
+                        .then(function(data) {
+                          del([_tempDestination]);
+
+                          res.redirect('/users/' + req.params.id);
+                        })
+                      }
                     }
+
                   }).catch(function(err){
                     next(err);
                   });
