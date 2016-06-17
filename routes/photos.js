@@ -32,6 +32,7 @@ router.get('/', function(req, res, next) {
 // TODO explore other upload options for security within the 'multer' module
 // https://www.npmjs.com/package/multer
 router.post('/tagphoto', upload.any(), function(req,res,next){
+  console.log("-----------------------------------");
   console.log('in post');
   // TODO: derive title from user and some random info
   // var title = req.body.title.trim() || req.files[0].originalname;
@@ -61,77 +62,155 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
             targetFaceId = data[0].faceId;
             console.log(targetFaceId);
 
-            // id in .where() needs to equal target's stored faceinfo faceId -- consult with brendan/rob
-            knex('users')
-            .where({id:3})
-            .then(function(data) {
-              console.log(data);
-              userFaceIdv = data[0].faceinfo;
+            var targetTempImageUrl = result.url;
+            console.log(req.session.user.id);
+
+            // .where({userid: parseInt(req.session.user.id)})
+            if(req.session.user && req.session.user.id > 0){
+
+              knex('players')
+              .where({userid: 5})
+              .first()
+              .then(function(hunter) {
+                if(hunter){
+                  console.log(hunter);
+                    console.log("-----------------------------------");
+                  knex('activeplayers')
+                  .where({gameid:hunter.gameid, playerid:hunter.id})
+                  .first()
+                  .then(function(activehunter){
+                    console.log(activehunter);
+                    console.log("-----------------------------------");
+                    knex('players')
+                    .where({id:activehunter.targetid})
+                    .first()
+                    .then(function(targetedplayer){
+                      console.log(targetedplayer);
+                      console.log("-----------------------------------");
+                      knex('users')
+                      .where({id:targetedplayer.userid})
+                      .first()
+                      .then(function(targeteduser){
+                        console.log(targeteduser);
+                        console.log("-----------------------------------");
+                        var targetProfileImage = targeteduser.imageurl;
+                        if(targetProfileImage){
+                          console.log(targetProfileImage);
+                          console.log("-----------------------------------");
+
+                          //targetTempImageUrl
+
+                          //now we have 2 images to compare
+
+                          knex('users')
+                          .where({id:targeteduser.id})
+                          .then(function(data) {
+                            console.log(data);
+                            console.log("-----------------------------------");
+                            userFaceIdv = data[0].faceinfo;
+
+                            photoapi.faceVerifyAPI(targetFaceId, userFaceIdv)
+                            .then(function(data) {
+                                console.log('arg1', targetFaceId);
+                                console.log('arg2', userFaceIdv);
+                                console.log("-----------------------------------");
+                                console.log(data);
+                                if(data.error) {
+                                  console.log(data.error);
+                                }
+                                else if(data.isIdentical === true) {
+                                  // require("jsdom").env("", function(err, window) {
+                                  //  if (err) {
+                                  //    console.error(err);
+                                  //    return;
+                                  //  }
+                                  //
+                                  //  var $ = require("jquery")(window);
+                                  //  $('#tagConfirmed').openModal();
+                                  // });
+                                 // $('#tagConfirmed').openModal();
+                                 // success - tag confirmed, target 'dies', new target assigned
+                                 console.log('faces match');
+                                }
+                                else if(data.isIdentical === false) {
+                                  // require("jsdom").env("", function(err, window) {
+                                  //  if (err) {
+                                  //    console.error(err);
+                                  //    return;
+                                  //  }
+                                  //
+                                  //  var $ = require("jquery")(window);
+                                  //  $('#tagDenied').openModal();
+                                  // });
+                                 //  $('#tagDenied').openModal();
+                                 // failure - captured face image is not a match, take user back to photo-upload page
+                                 console.log('faces do not match');
+                                }
+                            }).catch(function(err){
+                              console.log(err);
+                              })
+                          }).catch(function(err) {
+                            next(err);
+                          });
+
+                        } else {
+                          console.log('no target profie image');
+
+                          //TODO send an error message that target has no profile image
+                          res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
+                        }
+
+                        // now access you vars via targeteduser (imageurl) and targetedplayer(lastlocation)
+                        console.log(targeteduser);
+
+                      }).catch(function(err){
+                        next(err);
+                      });
+                    }).catch(function(err){
+                      next(err);
+                    });
+                  }).catch(function(err){
+                    next(err);
+                  });
+                } else {
+                  console.log('player IS NOT member of game');
+                  res.send(targetlocale);
+                }
+
+              }).catch(function(err){
+                next(err);
+              });
+            } else {
+              console.log('session user not valid');
+            }
 
              // arguments below: new FaceId, targetFaceId pulled from target's DB
              // test: match = '5c265616-f3aa-41cf-a372-dbc02f16028a'
              // test: not match = '5cc77a0e-eb23-4913-9088-1411440ad945'
 
-             photoapi.faceVerifyAPI(targetFaceId, userFaceIdv)
-             .then(function(data) {
-                 console.log('arg1', targetFaceId);
-                 console.log('arg2', userFaceIdv);
-                 console.log(data);
-                 if(data.error) {
-                   console.log(data.error);
-                 }
-                 else if(data.isIdentical === true) {
-                   require("jsdom").env("", function(err, window) {
-                   	if (err) {
-                   		console.error(err);
-                   		return;
-                   	}
-
-                   	var $ = require("jquery")(window);
-                    $('#tagConfirmed').openModal();
-                   });
-                  // $('#tagConfirmed').openModal();
-                  // success - tag confirmed, target 'dies', new target assigned
-                  console.log('faces match');
-                 }
-                 else if(data.isIdentical === false) {
-                   require("jsdom").env("", function(err, window) {
-                   	if (err) {
-                   		console.error(err);
-                   		return;
-                   	}
-
-                   	var $ = require("jquery")(window);
-                    $('#tagDenied').openModal();
-                   });
-                  //  $('#tagDenied').openModal();
-                  // failure - captured face image is not a match, take user back to photo-upload page
-                  console.log('faces do not match');
-                 }
+              }
              }).catch(function(err){
-               console.log(err);
-               })
-             }).catch(function(err){
-               console.log(err);
+               next(err);
             })
-          }
-        }).catch(function(err){
-          console.log(err);
-        });
-      // delete local temp file
-      // don't bother waiting for promise resolve to move on
-      del([tempDestination]);
-      // .then(paths => {
-      // 	console.log('Files and folders that would be deleted:\n', paths.join('\n'));
-      // });
-      res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
-    },
-    {
-      crop: 'fit',
-      width: 800,
-      height: 800
-    })
-  });
+          .catch(function(err){
+            next(err);
+          })
+          // delete local temp file
+          // don't bother waiting for promise resolve to move on
+          del([tempDestination]);
+          // .then(paths => {
+          // 	console.log('Files and folders that would be deleted:\n', paths.join('\n'));
+          // });
+          res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
+        },
+        {
+          crop: 'fit',
+          width: 800,
+          height: 800
+        }
+      )
+    });
+
 
 router.get('/tagphoto', function(req, res, next) {
   res.render('photos');
