@@ -119,6 +119,7 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
                                   console.log(data.error);
                                 }
                                 else if(data.isIdentical === true) {
+                                  res.render('tagconfirmed');
                                   // require("jsdom").env("", function(err, window) {
                                   //  if (err) {
                                   //    console.error(err);
@@ -133,6 +134,7 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
                                  console.log('faces match');
                                 }
                                 else if(data.isIdentical === false) {
+                                  res.render('tagdenied');
                                   // require("jsdom").env("", function(err, window) {
                                   //  if (err) {
                                   //    console.error(err);
@@ -201,7 +203,6 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
           // .then(paths => {
           // 	console.log('Files and folders that would be deleted:\n', paths.join('\n'));
           // });
-          res.render('photos', { siteSection: 'photos', title: 'Photos', latestPhoto: result.url });
         },
         {
           crop: 'fit',

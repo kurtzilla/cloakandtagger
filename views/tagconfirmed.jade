@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  
+  h4 CONGRATULATIONS
+  p We have successfully confirmed your tag. You have elminated the target from the game and will be assigned a new target. Nice work!
+  
+  form(method='post' enctype='multipart/form-data')
+    if latestPhoto
+    p(class="tag-upload-frame")
+      img(src="#{latestPhoto}" id="tag-upload")
+    p(id="tag-upload-space") 
+    p 
+      label(for"image" class="file-upload-label")
+      input(type="file" name="image" class="waves-effect waves-light btn")
+    p(class="tag-upload-frame")
+      input(type="submit" value="Upload" class="waves-effect waves-light btn")
+  
+    
+  div(id="tagConfirmed" class="modal")
+    div(class="modal-content")
+      h4 CONGRATULATIONS
+      p We have successfully confirmed your tag. You have elminated the target from the game and will be assigned a new target. Nice work!
+    div(class="modal-footer")
+      a(href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat") Get me my new target, already!
+  
+  div(id="tagDenied" class="modal")
+    div(class="modal-content")
+      h4 TRY AGAIN!
+      p We were not able to confirm that the person you tagged is your target. Make sure that you have identified the target accurately and upload a better image to get a confirmed tag.
+    div(class="modal-footer")
+      a(href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat") I Understand
+  //- - if (images && images.length)
+  //-   - images.forEach(function(image){
+  //-     img(src=image.url)
+  //-   - })
