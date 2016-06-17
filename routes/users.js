@@ -277,7 +277,8 @@ router.post('/:id', upload.any(), function(req,res,next){
               //TODO: add API call
               photoapi.faceDetectAPI(result.url)
                 .then(function(data) {
-                  // console.log(data);
+
+                  console.log(data);
                   var userFaceId = data[0].faceId;
                   console.log(userFaceId);
                     if(photoapi.valImage(data) === "no face") {
