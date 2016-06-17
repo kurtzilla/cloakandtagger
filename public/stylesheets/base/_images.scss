@@ -13,13 +13,15 @@ img#user-upload {
 img#tag-upload {
   height: 300px;
   width: auto;
+}
 
 #targetContainer{
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.targetImage{
+
+.targetImage {
   max-width: 500px;
   max-height: 500px;
 }
