@@ -138,23 +138,27 @@ router.get('/:id', function(req, res, next){
 
 
     // TODO join players to users
-    knex('players')
-    .where({ gameid: game.id })
-    .then(function(players){
-    // knex.select('*')
-    // .from('players')
-    // .leftOuterJoin('users', 'players.userid', 'users.id')
+    // knex('players')
     // .where({ gameid: game.id })
     // .then(function(players){
-    //   console.log('Playa',players[0]);
-    // // knex('players')
-    // // .where({ gameid: game.id })
-    // // .then(function(players){
-    //   // for(var i=0;i<players.length)
+
+
+    knex.select('*')
+    .from('players')
+    .leftOuterJoin('users', 'players.userid', 'users.id')
+    .where({ gameid: game.id })
+    .then(function(players){
+      console.log('Playa',players[0]);
+    // knex('players')
+    // .where({ gameid: game.id })
+    // .then(function(players){
+      // for(var i=0;i<players.length)
 
       knex('activeplayers')
       .where({ gameid: game.id })
       .then(function(actives){
+
+        console.log('Actives', actives);
 
         knex('gameevents')
         .where({ gameid: game.id })

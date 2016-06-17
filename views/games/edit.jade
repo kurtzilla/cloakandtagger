@@ -26,15 +26,11 @@ block content
     if players.length > 0
       ul
         each ent in players
-          li id: #{ent.id} user: #{ent.userid} loc: #{ent.lastlocation}
-          //- li
-          //-   span
-          //-     img()
-        
-        
-        
-          //- li id: #{ent.id} user: #{ent.userid} loc: #{ent.lastlocation}
-    
+          li
+            img(src="#{ent.imageurl}" style="width:30px;height:30px;")  
+            b #{ent.alias} 
+            span  id: #{ent.id} user: #{ent.userid} loc: #{ent.lastlocation}
+          
     h6 active players
     if actives.length > 0
       ul

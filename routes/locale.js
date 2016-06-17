@@ -12,6 +12,7 @@ router.post('/user/:id', function(req, res, next) {
   console.log('REQUEST',req.originalUrl);
   var _userid = parseInt(req.params.id);
   var playerlatlng = req.body;
+  // console.log('userid in locale', _userid);
   console.log('going to update location to ', playerlatlng);
 
   // set a default response
@@ -27,14 +28,14 @@ router.post('/user/:id', function(req, res, next) {
     if(oldplayer){
       // we have a row/player to work with
       // so update the players current location => lastlocation
-      console.log('current in db player acquired', oldplayer.id);
+      // console.log('current in db player acquired', oldplayer.id);
 
       knex('players')
       .where({id:oldplayer.id, gameid:oldplayer.gameid})
       .update({lastlocation:JSON.stringify(playerlatlng)})
       .returning('id')
       .then(function(id){
-        console.log('hunterplayer location updated');
+        // console.log('hunterplayer location updated');
 
         //s requery to get fresh data
         knex('players')
@@ -42,14 +43,14 @@ router.post('/user/:id', function(req, res, next) {
         .first()
         .then(function(hunterplayer) {
 
-          console.log('updated hunterplayer acquired?', hunterplayer.lastlocation);
+          // console.log('updated hunterplayer acquired?', hunterplayer.lastlocation);
 
           knex('users')
           .select('*')
           .where({id:hunterplayer.userid})
           .first()
           .then(function(hunteruser){
-            console.log('hunteruser acquired', hunteruser.id);
+            // console.log('hunteruser acquired', hunteruser.id);
 
             //get active player row to match to target
             knex('activeplayers')
@@ -57,14 +58,14 @@ router.post('/user/:id', function(req, res, next) {
             .where({gameid:hunterplayer.gameid, playerid:hunterplayer.id})
             .first()
             .then(function(hunteractive){
-              console.log('hunteractive acquired', hunteractive.id);
+              // console.log('hunteractive acquired', hunteractive.id);
 
               //now get the matching target info
               knex('players')
               .where({gameid:hunterplayer.gameid, id:hunteractive.targetid})
               .first()
               .then(function(targetplayer){
-                console.log('targetplayer acquired', targetplayer.id);
+                // console.log('targetplayer acquired', targetplayer.id);
 
                 if(targetplayer){
 
@@ -72,7 +73,7 @@ router.post('/user/:id', function(req, res, next) {
                   .where({id:targetplayer.userid})
                   .first()
                   .then(function(targetuser){
-                    console.log('targetuser acquired', targetuser.id);
+                    // console.log('targetuser acquired', targetuser.id);
 
                     // console.log('sending target/user info found', targetuser.id);
                     //console.log('sending hunters update location', hunterplayer.targetlocation);
