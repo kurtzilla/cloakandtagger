@@ -5,15 +5,17 @@ var knex = require('../db/knex');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log('index');
-  res.render('index', { siteSection: 'index', title: 'Home page' });
-});
+  knex('games').then(function(data){
+    console.log(data);
+    res.render('index', {rows: data});
+  })
+})
 
 router.get('/testgameplay', function(req, res, next) {
   res.render('gameplay/gameplay');
 })
 router.get('/testgameplayhunt', function(req, res, next) {
-  console.log('Yo!');
+  // console.log('Yo!');
   res.render('gameplay/includes/hunt');
 })
 router.get('/testgameplaydossier', function(req, res, next) {

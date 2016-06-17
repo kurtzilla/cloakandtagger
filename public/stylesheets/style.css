@@ -31,6 +31,14 @@ p.user-upload-frame {
   width: 100%;
   z-index: 128; }
 
+#videoHeadlineLogomark {
+  color: white;
+  position: absolute;
+  top: 22%;
+  text-align: center;
+  height: 40%;
+  z-index: 128; }
+
 #videoHeadlineBottom {
   color: white;
   position: absolute;
@@ -56,11 +64,20 @@ p.user-upload-frame {
   top: 80%;
   text-align: center;
   width: 100%;
-  z-index: 128; }
+  z-index: 128;
+  font-size: 3em; }
 
 #gameplayContent {
   margin-bottom: 120px;
   overflow: scroll; }
+
+#huntLogomark {
+  color: white;
+  position: absolute;
+  top: 22%;
+  text-align: center;
+  height: 40%;
+  z-index: 128; }
 
 .gameDiv {
   width: 100%;
@@ -137,6 +154,15 @@ img {
 img#user-upload {
   height: 300px;
   width: auto; }
+
+#targetContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.targetImage {
+  max-width: 500px;
+  max-height: 500px; }
 
 .homepage-hero-module {
   border-right: none;
