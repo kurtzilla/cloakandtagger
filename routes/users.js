@@ -4,6 +4,7 @@ var router = express.Router();
 var knex = require('../db/knex');
 var bcrypt = require('bcrypt');
 var enums = require('../lib/enums');
+var query = require('../lib/queries_user');
 var multer  = require('multer');
 var upload = multer({ dest: 'upfiles/' });
 var del = require('del');
@@ -26,14 +27,23 @@ router.use(function(req,res,next){
 
 // return a list of users
 router.get('/', function(req, res, next){
-  knex('users')
-  .orderBy('email')
-  .then(function(data){
-    res.render('users/userlisting', { siteSection: 'users', title: 'User List', rows: data });
+  query.usersAll('email')
+  .then(function(rows){
+    res.render('users/userlisting', { siteSection: 'users', title: 'User List', rows: rows });
   })
   .catch(function(err){
     next(err);
   });
+
+
+  // knex('users')
+  // .orderBy('email')
+  // .then(function(data){
+  //   res.render('users/userlisting', { siteSection: 'users', title: 'User List', rows: data });
+  // })
+  // .catch(function(err){
+  //   next(err);
+  // });
 });
 
 
@@ -276,7 +286,7 @@ router.post('/:id', upload.any(), function(req,res,next){
           function(result) {
           // faceDetectInput = result.url;
             knex('users')
-            .where({id: parseInt(req.session.user.id)})
+            .where({id: parseInt(req.params.id)})
             .update({
               firstname: _firstname,
               lastname: _lastname,
@@ -304,7 +314,7 @@ router.post('/:id', upload.any(), function(req,res,next){
       } else {
         //other wise just update profile info with out concerning image
         knex('users')
-        .where({id: parseInt(req.session.user.id)})
+        .where({id: parseInt(req.params.id)})
         .update({
           firstname: _firstname,
           lastname: _lastname,
