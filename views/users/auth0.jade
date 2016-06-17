@@ -9,7 +9,7 @@ block content
     script(type='text/javascript').
       var lock = new Auth0Lock('GQYyzhNN70BQvNQrgaBSherDLANesAYV', 'samcate.auth0.com');
       lock.show({
-      callbackURL: 'http://localhost:3000/callback'
+      callbackURL: '#{host}/callback'
       , responseType: 'code'
       , authParams: {
       scope: 'openid email'  // Learn about scopes: https://auth0.com/docs/scopes
