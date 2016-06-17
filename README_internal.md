@@ -25,6 +25,12 @@ http://www.faceplusplus.com/uc_home/
 Native app conversion
 https://tabrisjs.com/
 
+//Auth0
+// domain: 'rkurtz.auth0.com',
+// clientID: 'FGGg0Dqkvj2Z5TGY5ep3RlGkeA840G8i',
+// clientSecret: 'iO1AONYZttMSAbXvOAq0nKQDj6I7j5roMQXzSD1w2RpWNpuEu9Ne8jgEGZg_igt1',
+// callbackURL: 'http://localhost:3000/callback'
+
 
 
 TODO:

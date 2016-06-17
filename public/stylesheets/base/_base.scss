@@ -48,6 +48,17 @@ p#tag-upload-space {
   width: 100%;
   z-index: 128;
 }
+
+#videoHeadlineLogomark {
+  color: white;
+  position: absolute;
+  top: 22%;
+  text-align: center;
+  height: 40%;
+  // width: 100%;
+  z-index: 128;
+}
+
 #videoHeadlineBottom {
   color: white;
   position: absolute;
@@ -68,6 +79,7 @@ p#tag-upload-space {
   height: 3px;
   z-index: 128;
 }
+
 #videoHeadlineLogo {
   color: white;
   position: absolute;
@@ -75,6 +87,9 @@ p#tag-upload-space {
   text-align: center;
   width: 100%;
   z-index: 128;
+  // margin-left: 2%;
+  // margin-right: 2%;
+  font-size: 3em;
 }
 
 #gameplayContent{
@@ -82,11 +97,22 @@ p#tag-upload-space {
   overflow: scroll;
 }
 
+#huntLogomark {
+  color: white;
+  position: absolute;
+  top: 22%;
+  text-align: center;
+  height: 40%;
+  // width: 100%;
+  z-index: 128;
+}
+
 .gameDiv {
   width: 100%;
   position: relative;
   // display: flex;
 }
+
 .gameimage {
     width: 100%;
     position: relative;

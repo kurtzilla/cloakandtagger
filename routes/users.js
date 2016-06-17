@@ -200,7 +200,7 @@ router.post('/signin', function(req,res,next) {
 });
 
 router.get('/auth0', function(req, res, next) {
-  res.render('users/auth0', { siteSection: 'users', title: 'Auth0' } );
+  res.render('users/auth0', { siteSection: 'users', title: 'Auth0', host:process.env.HOST } );
 });
 
 router.get('/testUser', function(req,res,next) {

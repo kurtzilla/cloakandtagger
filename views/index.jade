@@ -11,7 +11,15 @@ block content
     div(class="poster hidden")
       img(src="/video/Snapshots/Busy.jpg" alt="")
   h3(id="videoHeadlineTop") You're the hunter...
+  img(id="videoHeadlineLogomark" src="images/cloaklogo.svg") 
   h3(id="videoHeadlineBottom")  and the hunted.
   //- div(id="rule")
   hr(id="rule")
   h2(id="videoHeadlineLogo" class="cloakandtagger") Cloak & Tagger
+  if rows
+    each row in rows
+      div(class="gameDiv")
+        a(href="/join/"+row.id)
+          img(class="gameimage" src=row.imageurl)
+          h3(class="gameCityCaption")= row.title
+          h6(class="gameDateCaption")= row.dtstart
