@@ -120,31 +120,11 @@ router.post('/tagphoto', upload.any(), function(req,res,next){
                                 }
                                 else if(data.isIdentical === true) {
                                   res.render('tagconfirmed', { latestPhoto: result.url, targetCrossed: "http://www.clker.com/cliparts/X/Z/1/Z/v/7/cross.svg"  });
-                                  // require("jsdom").env("", function(err, window) {
-                                  //  if (err) {
-                                  //    console.error(err);
-                                  //    return;
-                                  //  }
-                                  //
-                                  //  var $ = require("jquery")(window);
-                                  //  $('#tagConfirmed').openModal();
-                                  // });
-                                 // $('#tagConfirmed').openModal();
                                  // success - tag confirmed, target 'dies', new target assigned
                                  console.log('faces match');
                                 }
                                 else if(data.isIdentical === false) {
                                   res.render('tagdenied', { latestPhoto: 'https://pbs.twimg.com/profile_images/378800000563115809/b5bfa0c4b2e8670d09222c17856abef4.jpeg'});
-                                  // require("jsdom").env("", function(err, window) {
-                                  //  if (err) {
-                                  //    console.error(err);
-                                  //    return;
-                                  //  }
-                                  //
-                                  //  var $ = require("jquery")(window);
-                                  //  $('#tagDenied').openModal();
-                                  // });
-                                 //  $('#tagDenied').openModal();
                                  // failure - captured face image is not a match, take user back to photo-upload page
                                  console.log('faces do not match');
                                 }
