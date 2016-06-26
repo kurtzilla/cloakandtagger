@@ -141,6 +141,8 @@ $(function(){
               var _alias = _target.alias || '';
               var _imageurl = _target.imageurl || '';
 
+
+              //TODO remove existing markers
               markerData.push({
                 location:_location,
                 firstname:_firstname,
