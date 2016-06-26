@@ -233,4 +233,11 @@ img.imagebtn {
   width: 30px;
   height: 30px; }
 
+span.gametarget {
+  display: inline-block;
+  background: #eee;
+  margin-left: 30px; }
+  span.gametarget:before {
+    content: '===> '; }
+
 /*# sourceMappingURL=style.css.map */

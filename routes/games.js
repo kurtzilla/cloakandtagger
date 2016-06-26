@@ -145,23 +145,52 @@ router.get('/:id', function(req, res, next){
       .where({ gameid: _game.id });
   })
   .then(function(playerIds){
-    // console.log('PLAYERS', playerIds);
-
     var playerPromises = [];
-
     for(var i=0;i<playerIds.length;i++){
       playerPromises.push(
         query.getUserPlayer_ByPlayerId(playerIds[i].id));
     }
-
     return Promise.all(playerPromises);
   })
   .then(function(userPlayers){
-
-    // console.log('now game events', userPlayers);
+    var targetPromises = [];
     for(var i=0;i<userPlayers.length;i++){
       _userplayers.push(userPlayers[i].rows[0]);
+      targetPromises.push(
+        query.getUserPlayer_ByPlayerId(userPlayers[i].rows[0].targetplayer_id)
+      );
     }
+    return Promise.all(targetPromises);
+  })
+  .then(function(targetPlayers){
+    var _targetPlayers = [];
+    for(var i=0;i<targetPlayers.length;i++){
+      _targetPlayers.push(targetPlayers[i].rows[0]);
+    }
+
+    // now match userplayers to targets and add in info for targets
+    // console.log('TARGETS', _targetPlayers);
+    for(var i=0;i<_userplayers.length;i++){
+      var targetIdx = _userplayers[i].targetplayer_id;
+      //console.log('tidx',targetIdx);
+      // console.log('TARGETS', _targetPlayers);
+      var target;
+      if(targetIdx){
+        // console.log('yes');
+        target = _targetPlayers.find(function(e, i, ar){
+
+          if(e.player_id === targetIdx){
+            return e;
+          }
+        });
+      }
+      // console.log('target',target);
+      _userplayers[i].targetplayer_image = (target) ? target.imageurl : '';
+      _userplayers[i].targetplayer_lastlocation = (target) ? target.lastlocation : '';
+    }
+
+    // console.log('HUNTERS', _userplayers);
+
 
     knex('gameevents')
       .where({ gameid: _game.id })
