@@ -9,6 +9,7 @@ var upload = multer({ dest: 'upfiles/' });
 var del = require('del');
 var cloudinary = require('cloudinary');
 var moment = require('moment');
+var query = require('../lib/query_user');
 
 
 cloudinary.config({
@@ -30,7 +31,9 @@ router.get('/', function(req, res, next) {
   .select('id','dtcreated','hostuserid','title','dtstart','dtend')
   .orderBy('id','desc')
   .then(function(data){
-    res.render('games/listing', { siteSection: 'game', title: 'Games', rows: data, moment: moment });
+    // pass moment functions to view
+    res.render('games/listing', { siteSection: 'game', title: 'Games',
+      rows: data, moment: moment });
   })
   .catch(function(err){
     next(err);
@@ -70,7 +73,7 @@ router.post('/new', upload.any(), function(req, res, next) {
 
   // return on error
   if(_errors.length > 0){
-    console.log('signup errors: ', _errors);
+    // console.log('signup errors: ', _errors);
     res.render('games/new', { siteSection: 'games', title: 'Games', error: _errors });
   } else {
 
@@ -80,8 +83,6 @@ router.post('/new', upload.any(), function(req, res, next) {
     cloudinary.uploader.upload(
       _tempDestination,
       function(result) {
-
-        // console.log('cloudinary result', result);
 
         knex('games')
         .insert({
@@ -129,56 +130,46 @@ router.post('/new', upload.any(), function(req, res, next) {
 
 
 router.get('/:id', function(req, res, next){
-  // res.send(req.params.id);
+
+  var _game, _players, _events;
+  var _userplayers = [];
+
   knex('games')
   .where({ id: parseInt(req.params.id) })
   .first()
   .then(function(game){
-    console.log('got games', game.id);
+    // console.log('GAME', game);
+    _game = game;
+    return knex.select('*')
+      .from('players')
+      .where({ gameid: _game.id });
+  })
+  .then(function(playerIds){
+    // console.log('PLAYERS', playerIds);
 
+    var playerPromises = [];
 
-    // TODO join players to users
-    // knex('players')
-    // .where({ gameid: game.id })
-    // .then(function(players){
+    for(var i=0;i<playerIds.length;i++){
+      playerPromises.push(
+        query.getUserPlayer_ByPlayerId(playerIds[i].id));
+    }
 
+    return Promise.all(playerPromises);
+  })
+  .then(function(userPlayers){
 
-    knex.select('*')
-    .from('players')
-    .leftOuterJoin('users', 'players.userid', 'users.id')
-    .where({ gameid: game.id })
-    .then(function(players){
-      console.log('Playa',players[0]);
-    // knex('players')
-    // .where({ gameid: game.id })
-    // .then(function(players){
-      // for(var i=0;i<players.length)
+    // console.log('now game events', userPlayers);
+    for(var i=0;i<userPlayers.length;i++){
+      _userplayers.push(userPlayers[i].rows[0]);
+    }
 
-      knex('activeplayers')
-      .where({ gameid: game.id })
-      .then(function(actives){
-
-        console.log('Actives', actives);
-
-        knex('gameevents')
-        .where({ gameid: game.id })
-        .orderBy('id', 'desc')
-        .then(function(events){
-          //console.log('editing', game, players, actives, events);
-          res.render('games/edit', { siteSection: 'games', title: 'Games',
-            game: game, players: players, actives: actives, events: events, moment: moment });
-        })
-        .catch(function(err){
-          next(err);
-        });
-      })
-      .catch(function(err){
-        next(err);
-      })
-    })
-    .catch(function(err){
-      next(err);
-    });
+    knex('gameevents')
+      .where({ gameid: _game.id })
+      .orderBy('id', 'desc');
+  })
+  .then(function(_events){
+    res.render('games/edit', { siteSection: 'games', title: 'Games',
+      game: _game, players: _userplayers, events: _events, moment: moment });
   })
   .catch(function(err){
     next(err);

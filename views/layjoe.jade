@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    
+  body
+    div(class="hiddeninfo")
+      if user
+        input(type="hidden" id="userid" value="#{user.id}")
+      else
+        input(type="hidden" id="userid" value="0")
+        
+      input(type="hidden" id="userlocale" value="")
+      input(type="hidden" id="targetlocale" value="")
+    
+    block content
+  
+    
+    
+    script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")
+    script(src="/javascripts/maps.js")  
+    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATUYe1ncrFm2KKHbZX12ky-NRaVnBraMI&callback=initMap" async defer)
+    
+    script(src="/javascripts/client.js")

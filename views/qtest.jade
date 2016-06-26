@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  
+  h3= title
+  //- currentTest: _currentTest, results: _results, errors: _errors  
+  p
+  h5= currentTest
+  
+  if errors
+    ul
+    each err in errors
+      li= err
+  
+  if qdata
+    each val, key in qdata
+      div #{key}: #{val}
+  div(style="border-top:1px #222 solid;")
+  
+  if hunter
+    h5 HUNTER
+    each val, key in hunter
+      span(style="padding-right:10px;display:inline !important;") #{key}: #{val}
+  div(style="border-top:1px #222 solid;")
+  
+  if target
+    h5 TARGET
+    each val, key in target
+      span(style="padding-right:10px;display:inline !important;") #{key}: #{val}
+  div(style="border-top:1px #222 solid;")
+  
+  
+  
+  form(action="/qtest" method="POST")
+    p 
+      each user in userList
+        span 
+          a(href="/qtest/#{user.id}")
+            img(class="imagebtn" src="#{user.imageurl.replace('/upload/','/upload/w_30,h_30/')}" )
+          //- input(type="submit" name="submitBtn" value="#{user.id}")

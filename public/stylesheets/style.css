@@ -229,4 +229,8 @@ img#targetCrossed {
   bottom: 0;
   min-height: 100vh; }
 
+img.imagebtn {
+  width: 30px;
+  height: 30px; }
+
 /*# sourceMappingURL=style.css.map */

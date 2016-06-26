@@ -30,32 +30,26 @@ block content
             img(src="#{ent.imageurl}" style="width:30px;height:30px;")  
             b #{ent.alias} 
             span  id: #{ent.id} user: #{ent.userid} loc: #{ent.lastlocation}
-          
-    h6 active players
-    if actives.length > 0
-      ul
-        each ent in actives
-          li id: #{ent.id} player: #{ent.playerid} target: #{ent.targetid}
     
-    h6 game events
-    table(class="bordered striped")
-      tr
-        th date
-        th status
-        th playerid
-        th targetid
-        th verb
-        th oldval
-        th newval
-        th description
-        th ip
-      each ent in events
-        td #{moment(ent.dtcreated).format("YY-MM-DD HH:mm:ss")}
-        td= ent.status
-        td= ent.playerid
-        td= ent.targetplayerid
-        td= ent.eventverb
-        td= ent.oldvalue
-        td= ent.newvalue
-        td= ent.description
-        td= ent.ipaddress
+    //- h6 game events
+    //- table(class="bordered striped")
+    //-   tr
+    //-     th date
+    //-     th status
+    //-     
+    //-     th targetid
+    //-     th verb
+    //-     th oldval
+    //-     th newval
+    //-     th description
+    //-     th ip
+    //-   each ent in events
+    //-     td #{moment(ent.dtcreated).format("YY-MM-DD HH:mm:ss")}
+    //-     td= ent.status
+    //-     
+    //-     td= ent.targetplayerid
+    //-     td= ent.eventverb
+    //-     td= ent.oldvalue
+    //-     td= ent.newvalue
+    //-     td= ent.description
+    //-     td= ent.ipaddress

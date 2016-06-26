@@ -20,6 +20,7 @@ var photos = require('./routes/photos');
 var admin = require('./routes/admin');
 var games = require('./routes/games');
 var locale = require('./routes/locale');
+var qtest = require('./routes/qtest');
 
 var enums = require('./lib/enums');
 
@@ -84,6 +85,7 @@ app.use('/photos', photos);
 app.use('/admin', admin);
 app.use('/games', games);
 app.use('/locale', locale);
+app.use('/qtest', qtest);
 
 
 // Auth0 callback handler

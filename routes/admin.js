@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../db/knex');
 var enums = require('../lib/enums');
+var query_user = require('../lib/query_user');
 
 // TODO require registered user for access
 router.use(function(req,res,next){
@@ -18,8 +19,10 @@ router.get('/', function(req, res) {
 
 //Users
 router.get('/users', function(req, res, next) {
-  knex('users').orderBy('email', 'asc').then(function(data){
-    res.render('admin/users', { siteSection: 'admin', title: 'Admin', rows: data});
+  query_user
+  .usersAll('email', 'asc')
+  .then(function(users){
+    res.render('admin/users', { siteSection: 'admin', title: 'Admin', rows: users});
   });
 });
 

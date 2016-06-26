@@ -5,13 +5,11 @@ var gError = document.getElementById('geoerror');
 var boulderCO = {"lat":40.0179492,"lng":-105.2821528}; // downtown galvanize
 
 var markerData = [];
-
 var markers = [];
 
 
 // google request call
 function initMap(){
-    // console.log('initMap function');
     drawMap();
 }
 
@@ -32,14 +30,10 @@ function drawMap(centerLatLng){
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
       map = new google.maps.Map(mapDiv, mapOptions);
-      // map = new google.maps.Map(mapDiv);
     }
     else {
-      //console.log('panning map to', _pos);
       map.panTo(_pos);
     }
-
-    // console.log('MarkerData', markerData);
 
     for(var i=0;i<markerData.length;i++){
       var mark = markerData[i];
@@ -61,11 +55,8 @@ function drawMap(centerLatLng){
         content: contentString
       });
 
-      // console.log('image', mark.imageurl);
       var iconImg = mark.imageurl.replace(/upload/i,
         'upload/g_face,c_thumb,c_crop,w_45,h_45,bo_1px_solid_rgb:e91e63,z_0.7,r_3');
-      // e91e63
-      // console.log('image', iconImg);
 
       var markInstance = new google.maps.Marker({
         position: mark.location,
@@ -96,14 +87,15 @@ $(function(){
     if(gError){
       gError.innerHTML = 'navigator.geolocation is available';
     } else {
-      console.log('navigator.geolocation is available');
+      // console.log('navigator.geolocation is available');
     }
 
     var watchId = navigator.geolocation.watchPosition(function(position) {
+      // console.log('Everytime through loop (watchPos)');
       if(gError){
         gError.innerHTML = ' watching Position: ' + new Date().toISOString();
       } else {
-        console.log(' watching Position: ' + new Date().toISOString());
+        // console.log(' watching Position: ' + new Date().toISOString());
       }
 
       var userId = document.getElementById('userid');
@@ -114,11 +106,9 @@ $(function(){
           position.coords.latitude,
           position.coords.longitude);
 
-        console.log('user position - sending to server', _userPos.toJSON());
+        var _url = window.location.origin + '/locale/user/' + _userId;
 
         //ajax call to record location
-        var _url = window.location.origin + '/locale/user/1';
-        // console.log('google watchPosition: ' + new Date().toISOString() + ' @ ' + _userPos);
         $.ajax({
           method: 'POST',
           url: _url,
@@ -126,46 +116,30 @@ $(function(){
           data: _userPos.toJSON()
         })
         .done(data =>{
-          // console.log('returned data', data);
 
-          var _targetPlayer = data.targetplayer;
-          var _targetUser = data.targetuser;
-          var _hunterPlayer = data.hunterplayer;
-          var _hunterUser = data.hunteruser;
-
-          // console.log('hunteruser', _hunterPlayer.lastlocation);
-          // console.log('targetuser', _targetPlayer.lastlocation);
-
+          var _hunter = data.hunter;
+          var _target = data.target;
           var _mapcenter = new google.maps.LatLng(boulderCO);
           // reset data
           markerData = [];
 
-          if(_targetPlayer && _targetUser){
-            // console.log('target alias/first/last/location',
-            //   _targetUser.alias, _targetUser.firstname, _targetUser.lastname, _targetPlayer.lastlocation);
-            // console.log('hunter alias/first/last/location',
-            //   _hunterUser.alias, _hunterUser.firstname, _hunterUser.lastname, _hunterPlayer.lastlocation);
-
+          if(_target){
             // convert from string
-            var locationObj = JSON.parse(_targetPlayer.lastlocation);
+            var locationObj = JSON.parse(_target.lastlocation);
 
             if(locationObj.lat === 0.0 && locationObj.lat === 0.0){
-              console.log('target location is not available', _targetPlayer.lastlocation);
+              console.log('target location is not available', _target.lastlocation);
             } else {
 
-              // console.log('center on target player', locationObj);
               _mapcenter = new google.maps.LatLng(
                 locationObj.lat,
                 locationObj.lng);
 
-              // console.log('map center', _mapcenter.toJSON());
-
-
               var _location = _mapcenter;
-              var _firstname = _targetUser.firstname || '';
-              var _lastname = _targetUser.lastname || '';
-              var _alias = _targetUser.alias || '';
-              var _imageurl = _targetUser.imageurl || '';
+              var _firstname = _target.firstname || '';
+              var _lastname = _target.lastname || '';
+              var _alias = _target.alias || '';
+              var _imageurl = _target.imageurl || '';
 
               markerData.push({
                 location:_location,

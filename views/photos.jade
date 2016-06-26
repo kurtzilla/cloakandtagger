@@ -5,6 +5,11 @@ block content
   
   p(class="tag-upload-frame") Upload an Image of Your Target's Face
   
+  if errors
+    ul(class="error")
+      each err in errors
+        li= err
+  
   form(method='post' enctype='multipart/form-data')
     if latestPhoto
     p(class="tag-upload-frame")

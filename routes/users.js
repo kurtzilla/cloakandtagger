@@ -4,14 +4,13 @@ var router = express.Router();
 var knex = require('../db/knex');
 var bcrypt = require('bcrypt');
 var enums = require('../lib/enums');
-var query = require('../lib/queries_user');
+var query = require('../lib/query_user');
 var multer  = require('multer');
 var upload = multer({ dest: 'upfiles/' });
 var del = require('del');
 var cloudinary = require('cloudinary');
 var request = require('request');
 var photoapi = require("../modules/photoapi.js");
-
 
 
 cloudinary.config({
@@ -142,22 +141,22 @@ router.post('/signin', function(req,res,next) {
 
   // return on error
   if(_errors.length > 0){
-    console.log('signin errors: ', _errors);
+    // console.log('signin errors: ', _errors);
     res.render('users/signin', { siteSection: 'users', title: 'Signin', error: _errors });
   } else {
 
     // find user in db and if found - compare pwd
-    knex('users')
-    .where({email: _email.toLowerCase()})
-    .first()
-    .then(function(data){
-
-      if(data && bcrypt.compareSync(_pwd, data.password)){
-
+    //console.log('find by email', _email);
+    query
+    .userByEmail(_email.toLowerCase())
+    .then(function(user){
+      // console.log('tried to find:', _email, user.password);
+      if(user && bcrypt.compareSync(_pwd, user.password)){
+        // console.log('passes match - login');
         // log an event
         knex.insert({
           status: enums.eventStatus[1],
-          userid: data.id,
+          userid: user.id,
           eventverb: 'signin',
           newvalue: _email.toLowerCase(),
           description: 'user signin',
@@ -165,24 +164,26 @@ router.post('/signin', function(req,res,next) {
         }).into('userevents')
         .then(function(eventrow){
           // get rid of pwd in session object
-          data.password = null;
-          req.session.user = data;
-          res.redirect('/users/' + data.id);
+          // console.log('added event row', eventrow);
+          user.password = null;
+          req.session.user = user;
+          res.redirect('/users/' + user.id);
         })
         .catch(function(err){
           next(err);
         });
 
       } else {
-        res.render('users/signin', { siteSection: 'users', title: 'Signin', error: ['Invalid username/password'] });
+        // console.log('no match on pass');
+        res.render('users/signin', { siteSection: 'users',
+          title: 'Signin', error: ['Invalid username/password'] });
       }
-
     })
     .catch(function(err){
-      res.render('users/signin', { siteSection: 'users', title: 'Signin', error: ['Invalid username/password'] });
+      res.render('users/signin', { siteSection: 'users',
+        title: 'Signin', error: ['Invalid username/password'] });
     });
   }
-
 });
 
 router.get('/auth0', function(req, res, next) {
@@ -203,11 +204,10 @@ router.get('/signout', function(req, res, next) {
 
 //show user's details
 router.get('/:id', function(req,res,next){
-  knex('users')
-  .where({ id: parseInt(req.params.id)})
-  .first()
-  .then(function(data){
-    res.render('users/user', { siteSection: 'users', title: 'User Details', user: data });
+  query
+  .userById(parseInt(req.params.id))
+  .then(function(user){
+    res.render('users/user', { siteSection: 'users', title: 'User Details', user: user });
   })
   .catch(function(err){
     next(err);
@@ -215,13 +215,11 @@ router.get('/:id', function(req,res,next){
 });
 
 router.post('/:id', upload.any(), function(req,res,next){
-  //res.send('posted to user');
 
-  var faceDetectInput = "";
+  var faceDetectInput = '';
 
-  knex('users')
-  .where({id:parseInt(req.params.id)})
-  .first()
+  query
+  .userById(parseInt(req.params.id))
   .then(function(user){
 
     //verify inputs
@@ -231,8 +229,7 @@ router.post('/:id', upload.any(), function(req,res,next){
     var _bio = req.body.bio.trim();
     var _tempDestination = (req.files && req.files[0] && req.files[0].path) ? req.files[0].path : '';
     var _existingImage = user.imageurl;
-    var _faceinfo = "";
-    console.log(_faceinfo);
+    var _faceinfo = '';
     var _errors = [];
 
     if(_firstname.length === 0){
@@ -251,9 +248,11 @@ router.post('/:id', upload.any(), function(req,res,next){
 
     // return on error
     if(_errors.length > 0){
-      console.log('user errors: ', _errors);
-      res.render('users/' + req.params.id, { siteSection: 'users', title: 'User Details',
-        user: user, error: _errors });
+      res.render('users/' + req.params.id, {
+        siteSection: 'users',
+        title: 'User Details',
+        user: user,
+        error: _errors });
     } else {
 
       // if a new image was specified....we have already determined that one or the other exists
@@ -284,18 +283,18 @@ router.post('/:id', upload.any(), function(req,res,next){
                     res.redirect('/users/' + req.params.id);
                   } else {
                     var userFaceId = data[0].faceId;
-                    console.log(userFaceId);
+                    // console.log(userFaceId);
                       if(photoapi.valImage(data) === "no face") {
                         // does not upload, send error message to user
-                        console.log('error');
+                        // console.log('error');
                       }
                       else if(photoapi.valImage(data) === "mult faces") {
                         // does not upload, send error message to user
-                        console.log('error');
+                        // console.log('error');
                       }
                       else if(photoapi.valImage(data) === "1 face") {
                         // success - update column in database with object
-                        console.log('success');
+                        // console.log('success');
                         knex('users')
                         .where({id: parseInt(req.params.id)})
                         .update({faceinfo: userFaceId})
@@ -305,17 +304,13 @@ router.post('/:id', upload.any(), function(req,res,next){
                           res.redirect('/users/' + req.params.id);
                         })
                       }
-
-
                     }
-
                   }).catch(function(err){
                     next(err);
                   });
                 }).catch(function(err){
                   next(err);
                 });
-
               },
             {
             crop: 'fit',
